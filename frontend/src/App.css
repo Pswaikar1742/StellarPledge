@@ -39,7 +39,24 @@
   padding: 2rem;
 }
 
-.status-section, .integration-guide, .contract-info {
+.wallet-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 2rem;
+}
+
+.connected-content {
+  width: 100%;
+}
+
+.wallet-dashboard-section {
+  max-width: 600px;
+  margin: 0 auto 2rem auto;
+}
+
+.status-section, .integration-guide, .contract-info, .test-info {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 15px;
   padding: 2rem;
@@ -48,9 +65,34 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.status-section h2, .integration-guide h2, .contract-info h2 {
+.status-section h2, .integration-guide h2, .contract-info h2, .test-info h2 {
   color: #ffd700;
   margin-bottom: 1.5rem;
+}
+
+.test-steps {
+  text-align: left;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.test-steps h3 {
+  color: #a8edea;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.test-steps ol {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 1.5rem 2rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.test-steps li {
+  margin: 0.5rem 0;
+  font-size: 1.05rem;
+  line-height: 1.6;
 }
 
 .status-list {

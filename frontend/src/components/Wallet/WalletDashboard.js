@@ -24,6 +24,7 @@ const WalletDashboard = () => {
     if (isConnected && !isLocked) {
       loadBalance();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected, isLocked]);
 
   if (!isConnected) {

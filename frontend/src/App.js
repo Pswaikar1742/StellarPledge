@@ -1,121 +1,96 @@
 import React from 'react';
 import './App.css';
-import { WalletProvider } from './context/WalletContext';
+import { WalletProvider, useWallet } from './context/WalletContext';
 import { CampaignProvider } from './context/CampaignContext';
+import WalletConnect from './components/Wallet/WalletConnect';
+import WalletDashboard from './components/Wallet/WalletDashboard';
+import UnlockWallet from './components/Wallet/UnlockWallet';
 
 /**
- * Main App Component
- * Wraps application with Context Providers
- * 
- * UI components will be added here by frontend developer
+ * Main App Component with Standalone Wallet Integration
  */
-function App() {
-  return (
-    <WalletProvider>
-      <CampaignProvider>
-        <div className="App">
-          <header className="App-header">
-            <h1>🌟 StellarPledge</h1>
-            <p>Automated Creator Economy on Stellar</p>
-            <p className="subtitle">
-              Backend Ready - Waiting for UI Integration
-            </p>
-          </header>
+function AppContent() {
+  const { isConnected, isLocked } = useWallet();
 
-          <main className="App-main">
+  return (
+    <div className="App">
+      <header className="App-header">
+        <h1>🌟 StellarPledge</h1>
+        <p>Automated Creator Economy on Stellar</p>
+        <p className="subtitle">
+          Standalone Wallet - No Freighter Required!
+        </p>
+      </header>
+
+      <main className="App-main">
+        {/* Show wallet connection if not connected */}
+        {!isConnected && (
+          <div className="wallet-section">
+            <WalletConnect />
+          </div>
+        )}
+
+        {/* Show unlock screen if connected but locked */}
+        {isConnected && isLocked && (
+          <div className="wallet-section">
+            <UnlockWallet />
+          </div>
+        )}
+
+        {/* Show dashboard and app content when connected and unlocked */}
+        {isConnected && !isLocked && (
+          <div className="connected-content">
+            <div className="wallet-dashboard-section">
+              <WalletDashboard />
+            </div>
+
             <section className="status-section">
-              <h2>✅ Backend Status: Ready</h2>
+              <h2>✅ System Status: Ready for Testing</h2>
               <ul className="status-list">
                 <li>✅ Smart Contract Deployed with Perk System</li>
-                <li>✅ Freighter Wallet Integration Ready</li>
-                <li>✅ Soroban.js Contract Layer Complete</li>
-                <li>✅ React Context Providers Ready</li>
-                <li>✅ Custom Hooks for UI Available</li>
-                <li>⏳ Awaiting UI Components from Frontend Team</li>
+                <li>✅ Standalone Wallet Integration Complete</li>
+                <li>✅ Soroban.js Contract Layer Ready</li>
+                <li>✅ React Context Providers Active</li>
+                <li>✅ Create/Import/Read-Only Modes Working</li>
+                <li>⏳ Campaign UI Components Coming Next</li>
               </ul>
             </section>
 
-            <section className="integration-guide">
-              <h2>🔌 Integration Guide for Frontend Developer</h2>
-              
-              <div className="code-block">
-                <h3>1. Use Wallet Context:</h3>
-                <pre>{`import { useWallet } from './context/WalletContext';
+            <section className="test-info">
+              <h2>🧪 Testing Instructions</h2>
+              <div className="test-steps">
+                <h3>Test 1: Create New Wallet</h3>
+                <ol>
+                  <li>Click "Create New Wallet"</li>
+                  <li>Enter wallet name and password (min 8 chars)</li>
+                  <li>Save your secret key from backup screen!</li>
+                  <li>Wallet ready to use</li>
+                </ol>
 
-const MyComponent = () => {
-  const { publicKey, isConnected, connectWallet } = useWallet();
-  
-  return (
-    <button onClick={connectWallet}>
-      {isConnected ? publicKey : 'Connect Wallet'}
-    </button>
-  );
-};`}</pre>
-              </div>
+                <h3>Test 2: Import Demo Account (Alice)</h3>
+                <ol>
+                  <li>Get secret key from: demo-accounts/Alice.txt</li>
+                  <li>Click "Import Existing Wallet"</li>
+                  <li>Paste Alice's secret key</li>
+                  <li>Set password and import</li>
+                  <li>Should show ~9,999 XLM balance</li>
+                </ol>
 
-              <div className="code-block">
-                <h3>2. Create Campaign:</h3>
-                <pre>{`import { useCreateCampaign } from './hooks/useCampaignHooks';
+                <h3>Test 3: Read-Only Connection (Charlie)</h3>
+                <ol>
+                  <li>Charlie's public key: GC4GCLLQEERQXIHNYITVQINGT54UK3ZPHR5ACC6QKS2TKVS4YL3X7YVP</li>
+                  <li>Click "Connect Read-Only"</li>
+                  <li>Paste public key</li>
+                  <li>Can view but not sign transactions</li>
+                </ol>
 
-const CreateForm = () => {
-  const { create, isCreating } = useCreateCampaign();
-  
-  const handleSubmit = async () => {
-    const perk = {
-      threshold: 500,  // 500 XLM minimum
-      assetAddress: 'ASSET_CONTRACT_ADDRESS',
-      amount: 1000000  // 1 token (with 6 decimals)
-    };
-    
-    await create(1000, 24, perk);  // 1000 XLM goal, 24 hours
-  };
-  
-  return <button onClick={handleSubmit}>Create</button>;
-};`}</pre>
-              </div>
-
-              <div className="code-block">
-                <h3>3. Display Campaigns:</h3>
-                <pre>{`import { useCampaignList } from './hooks/useCampaignHooks';
-
-const CampaignList = () => {
-  const { campaigns, loading, refresh } = useCampaignList();
-  
-  if (loading) return <div>Loading...</div>;
-  
-  return campaigns.map(campaign => (
-    <div key={campaign.id}>
-      <h3>Goal: {campaign.goal} XLM</h3>
-      <p>Pledged: {campaign.pledged} XLM</p>
-      {campaign.perk && (
-        <span>🎁 Perk: {campaign.perk.threshold} XLM</span>
-      )}
-    </div>
-  ));
-};`}</pre>
-              </div>
-
-              <div className="code-block">
-                <h3>4. Make Pledge:</h3>
-                <pre>{`import { usePledge, usePerkCheck } from './hooks/useCampaignHooks';
-
-const PledgeButton = ({ campaign }) => {
-  const { makePledge, isPledging } = usePledge();
-  const { qualifies, perkInfo } = usePerkCheck(campaign, 500);
-  
-  const handlePledge = async () => {
-    await makePledge(campaign.id, 500);  // Pledge 500 XLM
-  };
-  
-  return (
-    <div>
-      {qualifies && <span>🎁 You'll get the perk!</span>}
-      <button onClick={handlePledge} disabled={isPledging}>
-        Pledge
-      </button>
-    </div>
-  );
-};`}</pre>
+                <h3>Test 4: Lock/Unlock</h3>
+                <ol>
+                  <li>Click "Lock" button in dashboard</li>
+                  <li>Wallet locks (keypair cleared from memory)</li>
+                  <li>Enter password to unlock</li>
+                  <li>Ready to sign again</li>
+                </ol>
               </div>
             </section>
 
@@ -131,8 +106,18 @@ const PledgeButton = ({ campaign }) => {
                 <li>Secure Escrow with Success/Fail States</li>
               </ul>
             </section>
-          </main>
-        </div>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <WalletProvider>
+      <CampaignProvider>
+        <AppContent />
       </CampaignProvider>
     </WalletProvider>
   );
