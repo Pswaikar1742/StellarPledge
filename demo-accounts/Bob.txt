@@ -1,0 +1,17 @@
+# Bob - The Small Backer (Student)
+
+## Account Details
+Public Key: GD4I6Y3FQW3PTNQAVP223YOFLHE66GTORJRGD55FWPZXI5SNCPU6NZNX
+Secret Key: [To be added - User should get from Stellar Lab]
+
+## Role
+- Discovers campaigns on StellarPledge
+- Makes smaller pledges (100-200 XLM)
+- Gets refund if campaign fails
+
+## Stellar Expert
+https://stellar.expert/explorer/testnet/account/GD4I6Y3FQW3PTNQAVP223YOFLHE66GTORJRGD55FWPZXI5SNCPU6NZNX
+
+## Use Case
+Bob is a student who supports creators with modest contributions.
+He will pledge 100 XLM to Alice's campaign (below perk threshold).
