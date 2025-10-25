@@ -1,8 +1,22 @@
 # StellarPledge: The Automated Creator Economy Protocol
 
-**A decentralized crowdfunding platform on the Stellar network that combines funding with on-chain, automated perk distribution.**
+**A decentralized crowdfunding platform on the Stellar network with standalone wallet, automated perk distribution, and zero Freighter dependency.**
 
 Built for the Stellar Build-a-thon 🚀
+
+---
+
+## 🎯 What's New: Standalone Wallet System
+
+**No Freighter Required!** StellarPledge now includes a fully integrated wallet system:
+
+- **🆕 Create New Wallet** - Generate Stellar keypair directly in-app
+- **📥 Import Existing Wallet** - Use your secret key (S...)
+- **👁️ Connect Read-Only** - View campaigns with just public key (G...)
+- **🔒 Secure Encryption** - Password-protected local storage
+- **💼 Complete Control** - Manage everything without browser extensions
+
+**[Read Standalone Wallet Documentation →](./docs/STANDALONE-WALLET.md)**
 
 ---
 

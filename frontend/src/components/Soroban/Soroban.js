@@ -13,7 +13,7 @@ import {
   Address,
   scValToNative,
 } from "@stellar/stellar-sdk";
-import { userSignTransaction } from "../Shared/Freighter";
+import WalletService from "../../services/WalletService";
 import { CONTRACT_ADDRESS, NETWORK_CONFIG, TX_TIMEOUT, TX_POLL_INTERVAL } from "../../constants/constants";
 
 // Initialize Soroban RPC provider
@@ -71,17 +71,11 @@ export async function contractInt(caller, functionName, params = null) {
     console.log(`📡 Simulating ${functionName}...`);
     let preparedTransaction = await provider.prepareTransaction(transaction);
 
-    // Step 5: Convert to XDR for signing
-    let transactionXDR = preparedTransaction.toXDR();
+    // Step 5: Sign transaction with standalone wallet
+    console.log(`✍️  Signing ${functionName}...`);
+    let signedTransaction = await WalletService.signTransaction(preparedTransaction);
 
-    // Step 6: Sign transaction with Freighter
-    console.log(`✍️  Requesting signature for ${functionName}...`);
-    let signedXDR = await userSignTransaction(transactionXDR, "TESTNET", caller);
-
-    // Step 7: Rebuild transaction from signed XDR
-    let signedTransaction = TransactionBuilder.fromXDR(signedXDR, Networks.TESTNET);
-
-    // Step 8: Submit transaction
+    // Step 6: Submit transaction
     console.log(`🚀 Submitting ${functionName}...`);
     let sendResponse = await provider.sendTransaction(signedTransaction);
 
@@ -89,7 +83,7 @@ export async function contractInt(caller, functionName, params = null) {
       throw new Error(`Transaction failed: ${JSON.stringify(sendResponse.errorResult)}`);
     }
 
-    // Step 9: Poll for transaction result
+    // Step 7: Poll for transaction result
     if (sendResponse.status === "PENDING") {
       console.log(`⏳ Waiting for ${functionName} confirmation...`);
       let txResponse = await provider.getTransaction(sendResponse.hash);

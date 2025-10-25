@@ -1,10 +1,11 @@
 /**
- * Wallet Context Provider
- * Global state management for wallet connection and user data
+ * Wallet Context Provider - STANDALONE VERSION
+ * Global state management for wallet connection WITHOUT Freighter dependency
+ * Supports: Create wallet, Import wallet, Connect read-only
  */
 
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { checkConnection, retrievePublicKey, isInstalled } from "../components/Shared/Freighter";
+import WalletService from "../services/WalletService";
 
 const WalletContext = createContext();
 
@@ -19,52 +20,65 @@ export const useWallet = () => {
 export const WalletProvider = ({ children }) => {
   const [publicKey, setPublicKey] = useState("");
   const [isConnected, setIsConnected] = useState(false);
-  const [isFreighterInstalled, setIsFreighterInstalled] = useState(false);
+  const [walletType, setWalletType] = useState(null); // 'created', 'imported', 'readonly'
+  const [walletName, setWalletName] = useState("");
+  const [isLocked, setIsLocked] = useState(false);
+  const [isReadOnly, setIsReadOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [balance, setBalance] = useState(null);
 
-  // Check if Freighter is installed on mount
+  /**
+   * Check for stored wallet on mount
+   */
   useEffect(() => {
-    const checkFreighter = async () => {
-      const installed = await isInstalled();
-      setIsFreighterInstalled(installed);
-    };
-    checkFreighter();
+    const storedWallet = WalletService.checkStoredWallet();
+    if (storedWallet) {
+      setPublicKey(storedWallet.publicKey);
+      setWalletType(storedWallet.walletType);
+      setWalletName(storedWallet.walletName || "My Wallet");
+      setIsLocked(storedWallet.needsUnlock);
+      setIsReadOnly(storedWallet.walletType === "readonly");
+      setIsConnected(true);
+      
+      console.log("🔄 Wallet detected:", storedWallet);
+      
+      // Auto-load balance for read-only wallets
+      if (storedWallet.walletType === "readonly") {
+        loadBalance(storedWallet.publicKey);
+      }
+    }
   }, []);
 
   /**
-   * Connect to Freighter wallet
+   * Create a new wallet
+   * @param {string} walletName - Name for the wallet
+   * @param {string} password - Password to encrypt secret key
+   * @returns {Object} { publicKey, secretKey, mnemonic }
    */
-  const connectWallet = async () => {
+  const createWallet = async (walletName, password) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // Check if Freighter is installed
-      if (!isFreighterInstalled) {
-        throw new Error("Freighter wallet is not installed. Please install it from freighter.app");
-      }
-
-      // Check connection
-      const allowed = await checkConnection();
-      if (!allowed) {
-        throw new Error("Connection to Freighter was denied. Please try again.");
-      }
-
-      // Get public key
-      const pubKey = await retrievePublicKey();
-      setPublicKey(pubKey);
+      const result = await WalletService.createWallet(walletName, password);
+      
+      setPublicKey(result.publicKey);
+      setWalletType("created");
+      setWalletName(walletName);
       setIsConnected(true);
+      setIsLocked(false);
+      setIsReadOnly(false);
 
-      // Store in localStorage for persistence
-      localStorage.setItem("stellarpledge_wallet", pubKey);
+      console.log("✅ Wallet created:", result.publicKey);
+      
+      // Load balance
+      await loadBalance();
 
-      console.log("✅ Wallet connected:", pubKey);
-      return pubKey;
+      return result; // Return secret key & mnemonic for backup
     } catch (err) {
-      console.error("Wallet connection failed:", err);
+      console.error("Create wallet failed:", err);
       setError(err.message);
-      setIsConnected(false);
       throw err;
     } finally {
       setIsLoading(false);
@@ -72,40 +86,174 @@ export const WalletProvider = ({ children }) => {
   };
 
   /**
-   * Disconnect wallet
+   * Import existing wallet using secret key
+   * @param {string} secretKey - Stellar secret key (S...)
+   * @param {string} password - Password to encrypt secret key
+   * @param {string} walletName - Optional name
+   * @returns {Object} { publicKey }
    */
-  const disconnectWallet = () => {
-    setPublicKey("");
-    setIsConnected(false);
-    localStorage.removeItem("stellarpledge_wallet");
-    console.log("👋 Wallet disconnected");
+  const importWallet = async (secretKey, password, walletName = "Imported Wallet") => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await WalletService.importWallet(secretKey, password, walletName);
+      
+      setPublicKey(result.publicKey);
+      setWalletType("imported");
+      setWalletName(walletName);
+      setIsConnected(true);
+      setIsLocked(false);
+      setIsReadOnly(false);
+
+      console.log("✅ Wallet imported:", result.publicKey);
+      
+      // Load balance
+      await loadBalance();
+
+      return result;
+    } catch (err) {
+      console.error("Import wallet failed:", err);
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   /**
-   * Try to restore wallet connection from localStorage
+   * Connect read-only wallet using public key
+   * @param {string} publicKey - Stellar public key (G...)
+   * @param {string} walletName - Optional name
+   * @returns {Object} { publicKey, readonly: true }
    */
-  useEffect(() => {
-    const savedWallet = localStorage.getItem("stellarpledge_wallet");
-    if (savedWallet && isFreighterInstalled) {
-      // Auto-reconnect
-      checkConnection().then((allowed) => {
-        if (allowed) {
-          setPublicKey(savedWallet);
-          setIsConnected(true);
-          console.log("🔄 Wallet auto-reconnected:", savedWallet);
-        }
-      });
+  const connectReadOnly = async (publicKey, walletName = "Read-Only Wallet") => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await WalletService.connectReadOnly(publicKey, walletName);
+      
+      setPublicKey(result.publicKey);
+      setWalletType("readonly");
+      setWalletName(walletName);
+      setIsConnected(true);
+      setIsLocked(false);
+      setIsReadOnly(true);
+
+      console.log("✅ Connected read-only:", result.publicKey);
+      
+      // Load balance
+      await loadBalance();
+
+      return result;
+    } catch (err) {
+      console.error("Connect read-only failed:", err);
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
     }
-  }, [isFreighterInstalled]);
+  };
+
+  /**
+   * Unlock wallet with password
+   * @param {string} password - User's password
+   */
+  const unlockWallet = async (password) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await WalletService.unlockWallet(password);
+      setIsLocked(false);
+      
+      console.log("🔓 Wallet unlocked");
+      
+      // Load balance
+      await loadBalance();
+
+      return true;
+    } catch (err) {
+      console.error("Unlock wallet failed:", err);
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  /**
+   * Lock wallet (clears keypair from memory)
+   */
+  const lockWallet = () => {
+    WalletService.lockWallet();
+    setIsLocked(true);
+    console.log("🔒 Wallet locked");
+  };
+
+  /**
+   * Disconnect wallet completely
+   */
+  const disconnectWallet = () => {
+    WalletService.disconnectWallet();
+    setPublicKey("");
+    setIsConnected(false);
+    setWalletType(null);
+    setWalletName("");
+    setIsLocked(false);
+    setIsReadOnly(false);
+    setBalance(null);
+    setError(null);
+    console.log("� Wallet disconnected");
+  };
+
+  /**
+   * Load account balance
+   */
+  const loadBalance = async (pubKey = null) => {
+    try {
+      const balanceData = await WalletService.getBalance(pubKey);
+      setBalance(balanceData);
+      return balanceData;
+    } catch (err) {
+      console.error("Load balance failed:", err);
+      // Don't throw, balance loading is not critical
+      return null;
+    }
+  };
+
+  /**
+   * Get wallet info
+   */
+  const getWalletInfo = () => {
+    return WalletService.getWalletInfo();
+  };
 
   const value = {
+    // State
     publicKey,
     isConnected,
-    isFreighterInstalled,
+    walletType,
+    walletName,
+    isLocked,
+    isReadOnly,
     isLoading,
     error,
-    connectWallet,
+    balance,
+    
+    // Actions
+    createWallet,
+    importWallet,
+    connectReadOnly,
+    unlockWallet,
+    lockWallet,
     disconnectWallet,
+    loadBalance,
+    getWalletInfo,
+    
+    // Service reference for advanced usage
+    walletService: WalletService,
   };
 
   return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>;
