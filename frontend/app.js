@@ -154,7 +154,7 @@ async function handleCreateCampaign(event) {
         // Build the transaction
         const contract = new StellarSdk.Contract(CONFIG.CONTRACT_ADDRESS);
         
-        const transaction = new StellarSdk.TransactionBuilder(account, {
+        let transaction = new StellarSdk.TransactionBuilder(account, {
             fee: StellarSdk.BASE_FEE,
             networkPassphrase: CONFIG.NETWORK_PASSPHRASE,
         })
@@ -167,10 +167,25 @@ async function handleCreateCampaign(event) {
             .setTimeout(180)
             .build();
         
-        // Sign the transaction
+        // Simulate the transaction to get the correct resource fees
+        console.log('Simulating transaction...');
+        const simulated = await server.simulateTransaction(transaction);
+        
+        if (StellarSdk.SorobanRpc.Api.isSimulationSuccess(simulated)) {
+            // Prepare the transaction with the simulation results
+            transaction = StellarSdk.SorobanRpc.assembleTransaction(
+                transaction,
+                simulated
+            ).build();
+        } else {
+            throw new Error('Simulation failed: ' + JSON.stringify(simulated));
+        }
+        
+        // Sign the prepared transaction
         transaction.sign(state.keypair);
         
         // Submit the transaction
+        console.log('Submitting transaction...');
         const result = await server.submitTransaction(transaction);
         
         console.log('Campaign created:', result);
@@ -185,7 +200,10 @@ async function handleCreateCampaign(event) {
         
     } catch (error) {
         console.error('Create campaign error:', error);
-        showMessage('Failed to create campaign: ' + error.message, 'error');
+        const errorMsg = error.response?.data?.extras?.result_codes 
+            ? JSON.stringify(error.response.data.extras.result_codes)
+            : error.message;
+        showMessage('Failed to create campaign: ' + errorMsg, 'error');
     }
 }
 
@@ -481,7 +499,7 @@ async function handlePledge() {
         const account = await server.loadAccount(state.keypair.publicKey());
         const contract = new StellarSdk.Contract(CONFIG.CONTRACT_ADDRESS);
         
-        const transaction = new StellarSdk.TransactionBuilder(account, {
+        let transaction = new StellarSdk.TransactionBuilder(account, {
             fee: StellarSdk.BASE_FEE,
             networkPassphrase: CONFIG.NETWORK_PASSPHRASE,
         })
@@ -494,6 +512,18 @@ async function handlePledge() {
             ))
             .setTimeout(180)
             .build();
+        
+        // Simulate and prepare transaction
+        const simulated = await server.simulateTransaction(transaction);
+        
+        if (StellarSdk.SorobanRpc.Api.isSimulationSuccess(simulated)) {
+            transaction = StellarSdk.SorobanRpc.assembleTransaction(
+                transaction,
+                simulated
+            ).build();
+        } else {
+            throw new Error('Simulation failed: ' + JSON.stringify(simulated));
+        }
         
         transaction.sign(state.keypair);
         
@@ -509,7 +539,10 @@ async function handlePledge() {
         
     } catch (error) {
         console.error('Pledge error:', error);
-        showMessage('Failed to pledge: ' + error.message, 'error');
+        const errorMsg = error.response?.data?.extras?.result_codes 
+            ? JSON.stringify(error.response.data.extras.result_codes)
+            : error.message;
+        showMessage('Failed to pledge: ' + errorMsg, 'error');
     }
 }
 
@@ -531,7 +564,7 @@ async function handleClaimFunds() {
         const account = await server.loadAccount(state.keypair.publicKey());
         const contract = new StellarSdk.Contract(CONFIG.CONTRACT_ADDRESS);
         
-        const transaction = new StellarSdk.TransactionBuilder(account, {
+        let transaction = new StellarSdk.TransactionBuilder(account, {
             fee: StellarSdk.BASE_FEE,
             networkPassphrase: CONFIG.NETWORK_PASSPHRASE,
         })
@@ -543,6 +576,18 @@ async function handleClaimFunds() {
             ))
             .setTimeout(180)
             .build();
+        
+        // Simulate and prepare transaction
+        const simulated = await server.simulateTransaction(transaction);
+        
+        if (StellarSdk.SorobanRpc.Api.isSimulationSuccess(simulated)) {
+            transaction = StellarSdk.SorobanRpc.assembleTransaction(
+                transaction,
+                simulated
+            ).build();
+        } else {
+            throw new Error('Simulation failed: ' + JSON.stringify(simulated));
+        }
         
         transaction.sign(state.keypair);
         
@@ -557,7 +602,10 @@ async function handleClaimFunds() {
         
     } catch (error) {
         console.error('Claim error:', error);
-        showMessage('Failed to claim funds: ' + error.message, 'error');
+        const errorMsg = error.response?.data?.extras?.result_codes 
+            ? JSON.stringify(error.response.data.extras.result_codes)
+            : error.message;
+        showMessage('Failed to claim funds: ' + errorMsg, 'error');
     }
 }
 
@@ -579,7 +627,7 @@ async function handleWithdrawRefund() {
         const account = await server.loadAccount(state.keypair.publicKey());
         const contract = new StellarSdk.Contract(CONFIG.CONTRACT_ADDRESS);
         
-        const transaction = new StellarSdk.TransactionBuilder(account, {
+        let transaction = new StellarSdk.TransactionBuilder(account, {
             fee: StellarSdk.BASE_FEE,
             networkPassphrase: CONFIG.NETWORK_PASSPHRASE,
         })
@@ -591,6 +639,18 @@ async function handleWithdrawRefund() {
             ))
             .setTimeout(180)
             .build();
+        
+        // Simulate and prepare transaction
+        const simulated = await server.simulateTransaction(transaction);
+        
+        if (StellarSdk.SorobanRpc.Api.isSimulationSuccess(simulated)) {
+            transaction = StellarSdk.SorobanRpc.assembleTransaction(
+                transaction,
+                simulated
+            ).build();
+        } else {
+            throw new Error('Simulation failed: ' + JSON.stringify(simulated));
+        }
         
         transaction.sign(state.keypair);
         
@@ -605,7 +665,10 @@ async function handleWithdrawRefund() {
         
     } catch (error) {
         console.error('Refund error:', error);
-        showMessage('Failed to withdraw refund: ' + error.message, 'error');
+        const errorMsg = error.response?.data?.extras?.result_codes 
+            ? JSON.stringify(error.response.data.extras.result_codes)
+            : error.message;
+        showMessage('Failed to withdraw refund: ' + errorMsg, 'error');
     }
 }
 
