@@ -342,7 +342,7 @@ class WalletService {
    * Check if wallet exists in storage
    * @returns {Object|null} Wallet info or null
    */
-  static checkStoredWallet() {
+  checkStoredWallet() {
     const publicKey = localStorage.getItem(STORAGE_KEYS.PUBLIC_KEY);
     const walletType = localStorage.getItem(STORAGE_KEYS.WALLET_TYPE);
     const walletName = localStorage.getItem(STORAGE_KEYS.WALLET_NAME);

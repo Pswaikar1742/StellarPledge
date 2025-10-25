@@ -7,61 +7,10 @@ import WalletDashboard from './components/Wallet/WalletDashboard';
 import UnlockWallet from './components/Wallet/UnlockWallet';
 
 /**
- * Error Boundary Component
- */
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.error('Error caught by boundary:', error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div style={{
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          color: 'white',
-          minHeight: '100vh',
-          padding: '2rem',
-          textAlign: 'center'
-        }}>
-          <h1>⚠️ Something went wrong</h1>
-          <p>Error: {this.state.error?.message}</p>
-          <button onClick={() => window.location.reload()} style={{
-            padding: '1rem 2rem',
-            fontSize: '1.2rem',
-            background: '#fff',
-            color: '#667eea',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            marginTop: '2rem'
-          }}>
-            Reload Page
-          </button>
-        </div>
-      );
-    }
-
-    return this.props.children;
-  }
-}
-
-/**
  * Main App Component with Standalone Wallet Integration
  */
 function AppContent() {
   const { isConnected, isLocked } = useWallet();
-  
-  console.log("AppContent render - isConnected:", isConnected, "isLocked:", isLocked);
 
   return (
     <div className="App">
@@ -166,13 +115,11 @@ function AppContent() {
 
 function App() {
   return (
-    <ErrorBoundary>
-      <WalletProvider>
-        <CampaignProvider>
-          <AppContent />
-        </CampaignProvider>
-      </WalletProvider>
-    </ErrorBoundary>
+    <WalletProvider>
+      <CampaignProvider>
+        <AppContent />
+      </CampaignProvider>
+    </WalletProvider>
   );
 }
 
