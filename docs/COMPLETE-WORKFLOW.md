@@ -11,22 +11,23 @@ This document outlines the complete, step-by-step workflows for Alice (Creator) 
 
 ### Phase 1: Pre-Launch Preparation (One-Time Setup)
 
-#### Step 1: Get a Wallet
-1. **Install Freighter Wallet**
-   - Visit: https://www.freighter.app/
-   - Install browser extension (Chrome/Firefox/Brave)
-   - Create new wallet OR import existing
+#### Step 1: Connect Your Wallet
+1. **Visit StellarPledge Platform**
+   - URL: https://localhost:3000 (or production URL)
+   - No browser extension required!
 
-2. **Switch to Testnet**
-   - Open Freighter
-   - Click Settings → Network → Select "Testnet"
-   - ⚠️ **CRITICAL:** Always verify "Testnet" is selected
-
-3. **Import Demo Account**
-   - Click "Import existing wallet"
+2. **Import Alice's Demo Account**
+   - Click **"Import Existing Wallet"**
    - Enter Alice's secret key: `SAH6ZOC6X4PVOHU7NQQ25KVWI2AGAHALTXI3N7UF4DLYUYJAJF22I7IF`
+   - Set password: `alice123` (for local encryption)
+   - Wallet Name: `Alice (Film Director)`
    - Public Key: `GDMT3KZ3Q4S5YKPBCI7BGJB5H3ST7GF2IFRJVU34WEIE5UX5NZTW5FTF`
    - Verify balance: ~9,999 XLM
+
+3. **Network Enforcement**
+   - ⚠️ **AUTOMATIC:** StellarPledge enforces Testnet only
+   - No manual network switching required
+   - All transactions protected to Testnet
 
 #### Step 2: Create the FILMCREDIT Perk Token
 
@@ -76,13 +77,13 @@ This document outlines the complete, step-by-step workflows for Alice (Creator) 
 
 ### Phase 2: Launching the Campaign
 
-#### Step 1: Visit StellarPledge Platform
-- URL: https://localhost:3001 (or production URL)
-- Connect Freighter wallet
-- Verify Alice's account is connected
+#### Step 1: Prepare Campaign Details
+1. Verify wallet is connected and unlocked
+2. Check balance is sufficient for gas fees
+3. Prepare campaign information
 
 #### Step 2: Start Campaign Creation
-1. Click **"Start Your Campaign"** button
+1. Click **"Start Your Campaign"** button (when UI is built)
 2. Fill out the campaign form:
 
 **Basic Information:**
@@ -125,12 +126,13 @@ Reward Description: Behind-the-scenes access and premiere tickets
    - Check perk configuration
    - Verify wallet address
 
-2. **Approve Transaction**
+2. **Sign Transaction**
    - Click "Launch Campaign"
-   - Freighter popup appears
+   - If wallet is locked, enter password to unlock
+   - Review transaction details in-app
    - Shows: `create_campaign` function call
    - Gas estimate: ~0.1 XLM
-   - Click "Approve"
+   - Confirm transaction
 
 3. **Confirmation**
    - Transaction confirms in ~5 seconds
@@ -170,11 +172,12 @@ Alice sees:
 
 2. **Claim Process**
    - Click "Claim Funds"
-   - Freighter popup
+   - Enter password if wallet is locked
+   - Review transaction details:
      - Shows: `claim_funds` function
      - Amount: 10,000+ XLM
      - Destination: Alice's wallet
-   - Approve transaction
+   - Confirm transaction
    - Funds transferred instantly
 
 3. **Post-Campaign**
@@ -219,13 +222,16 @@ Alice sees:
 
 ### Phase 1: Setup
 
-#### Step 1: Get Wallet
-1. Install Freighter extension
-2. Switch to Testnet
-3. Import Bob's account:
+#### Step 1: Connect Wallet
+1. Visit StellarPledge platform
+2. Choose connection method:
+   - **Import Wallet:** If you have a secret key
+   - **Create New Wallet:** For new users
+   - **Read-Only:** Just to browse
+3. For demo: Import Bob's account
    - Public Key: `GD4I6Y3FQW3PTNQAVP223YOFLHE66GTORJRGD55FWPZXI5SNCPU6NZNX`
-   - (Secret key from Stellar Lab or Friendbot)
-
+   - Secret Key: (from demo-accounts/Bob.txt)
+   - Password: `bob123`
 4. Verify testnet balance
 
 ### Phase 2: Discovery and Pledging
@@ -260,23 +266,21 @@ Campaign page shows:
 
 2. **Click "Pledge Now"**
 
-3. **Freighter Security Review**
+3. **Review Transaction**
+   - If wallet locked, enter password
+   - Transaction details displayed:
    ```
-   ┌────────────────────────────────┐
-   │ Confirm Transaction            │
-   ├────────────────────────────────┤
-   │ From: Bob's Wallet             │
-   │ To: StellarPledge Contract     │
-   │ Amount: 100 XLM                │
-   │ Function: pledge()             │
-   │ Campaign: #0                   │
-   ├────────────────────────────────┤
-   │ ⚠️ TESTNET Transaction         │
-   │ ✅ Funds go to secure escrow   │
-   └────────────────────────────────┘
+   From: Bob's Wallet
+   To: StellarPledge Contract
+   Amount: 100 XLM
+   Function: pledge()
+   Campaign: #0
+   
+   ⚠️ TESTNET Transaction
+   ✅ Funds go to secure escrow
    ```
 
-4. **Approve**
+4. **Confirm**
    - Transaction confirms in 5 seconds
    - Page updates immediately
    - Bob's name in backer list
@@ -301,16 +305,14 @@ Campaign page shows:
    - "Withdraw My Refund" button visible
    - Click button
 
-3. **Freighter Approval**
+3. **Confirm Transaction**
+   - Enter password if locked
+   - Transaction details:
    ```
-   ┌────────────────────────────────┐
-   │ Confirm Refund Withdrawal      │
-   ├────────────────────────────────┤
-   │ From: StellarPledge Contract   │
-   │ To: Bob's Wallet               │
-   │ Amount: 100 XLM (full refund)  │
-   │ Function: withdraw_refund()    │
-   └────────────────────────────────┘
+   From: StellarPledge Contract
+   To: Bob's Wallet
+   Amount: 100 XLM (full refund)
+   Function: withdraw_refund()
    ```
 
 4. **Instant Refund**
@@ -326,8 +328,12 @@ Campaign page shows:
 ### **Goal:** Make substantial pledge and receive automated perk
 
 ### Phase 1: Setup
-Same as Bob, but with Charlie's account:
-- Public Key: `GC4GCLLQEERQXIHNYITVQINGT54UK3ZPHR5ACC6QKS2TKVS4YL3X7YVP`
+Connect wallet using Charlie's account:
+- **Method 1:** Connect Read-Only first (browse only)
+  - Public Key: `GC4GCLLQEERQXIHNYITVQINGT54UK3ZPHR5ACC6QKS2TKVS4YL3X7YVP`
+- **Method 2:** Import directly (to pledge)
+  - Secret Key: (from demo-accounts/Charlie.txt)
+  - Password: `charlie123`
 
 ### Phase 2: High-Value Pledge
 
@@ -357,23 +363,21 @@ Charlie notices:
 
 3. **Click "Pledge Now"**
 
-4. **Freighter Shows TWO Operations:**
+4. **Review Multi-Operation Transaction**
+   - Enter password if locked
+   - Transaction shows TWO operations:
    ```
-   ┌────────────────────────────────┐
-   │ Confirm Multi-Operation TX     │
-   ├────────────────────────────────┤
-   │ Operation 1: Payment           │
-   │   500 XLM → Contract Escrow    │
-   │                                 │
-   │ Operation 2: Token Transfer    │
-   │   1 FILMCREDIT → Your Wallet   │
-   │   (Automatic from Alice)       │
-   ├────────────────────────────────┤
-   │ ⚡ Cross-Contract Call Magic!   │
-   └────────────────────────────────┘
+   Operation 1: Payment
+     500 XLM → Contract Escrow
+   
+   Operation 2: Token Transfer
+     1 FILMCREDIT → Your Wallet
+     (Automatic from Alice)
+   
+   ⚡ Cross-Contract Call Magic!
    ```
 
-5. **Approve**
+5. **Confirm**
    - Both operations execute atomically
    - If one fails, both revert
    - Charlie gets BOTH:
@@ -392,7 +396,8 @@ Charlie notices:
 3. Transaction history shows the transfer
 4. Proof of ownership on-chain
 
-#### In Freighter Wallet:
+#### In Wallet Balance:
+- Check balance in WalletDashboard
 - Assets list shows FILMCREDIT balance
 - Can transfer, hold, or trade later
 
@@ -412,24 +417,24 @@ Charlie notices:
 **Problem:** User tries to pledge more than balance  
 **Solution:**
 - Pre-flight balance check
-- Error before Freighter popup
+- Error before transaction
 - Message: "Insufficient balance. You have X XLM, need Y XLM (including fees)"
 
-### Freighter Not Installed
-**Problem:** User clicks "Connect Wallet" without Freighter  
+### Wallet Not Connected
+**Problem:** User tries to transact without wallet  
 **Solution:**
-- Detect extension absence
-- Show modal: "Install Freighter Wallet"
-- Direct link to freighter.app
-- Instructions for installation
+- Detect disconnected state
+- Show WalletConnect modal
+- Three connection options presented
+- Clear instructions provided
 
-### Wrong Network
-**Problem:** Freighter set to Mainnet instead of Testnet  
+### Wrong Network (Prevented)
+**Problem:** User concerned about testnet vs mainnet  
 **Solution:**
-- Detect network mismatch
-- Block all transactions
-- Prominent warning banner
-- Instructions to switch network
+- Network enforcement in code
+- ALL transactions forced to Testnet
+- Cannot accidentally use mainnet
+- Safety built into architecture
 
 ### Campaign Already Claimed
 **Problem:** Alice tries to claim twice  

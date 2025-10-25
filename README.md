@@ -78,9 +78,10 @@ Near-zero fees on the Stellar network enable community micro-funding. Support cr
 
 - **Blockchain:** Stellar Testnet (Soroban)
 - **Smart Contract:** Rust + Soroban SDK 20.5.0
-- **Frontend:** React 19.2.0 + TailwindCSS 3.4.18
-- **Wallet Integration:** Freighter API 2.0.0
+- **Frontend:** React 19.2.0
+- **Wallet:** Standalone wallet system (no extensions required)
 - **SDK:** Stellar SDK 11.3.0
+- **Security:** AES encryption, password-protected keystores
 
 ### Smart Contract Architecture
 
@@ -108,8 +109,8 @@ if let Some(perk) = &campaign.perk {
 - Explorer: [View on Stellar Expert](https://stellar.expert/explorer/testnet/contract/CD4L4MPVSJ3RLAUYQ3ID2M75VWVVMDFBTESJIY4UULFFN33X2KNRTJXY)
 
 **Frontend Application:**
-- URL: `https://localhost:3001` (local dev)
-- Status: Backend 100% complete, UI in development
+- URL: `https://localhost:3000` (local dev)
+- Status: Standalone wallet 100% complete, campaign UI in development
 
 ### Demo Flow (5 Minutes)
 
@@ -128,8 +129,8 @@ if let Some(perk) = &campaign.perk {
 ### Prerequisites
 
 - **Node.js** (v16+) and npm
-- **Freighter Wallet** browser extension ([Install here](https://www.freighter.app/))
-- Stellar testnet account with XLM ([Get from Friendbot](https://laboratory.stellar.org/#account-creator?network=test))
+- **Stellar testnet account** with XLM ([Get from Friendbot](https://laboratory.stellar.org/#account-creator?network=test))
+- **No wallet extension required** - Built-in standalone wallet system
 
 ### Installation
 
@@ -146,7 +147,15 @@ npm install
 npm start
 ```
 
-The application will open at: **https://localhost:3001**
+The application will open at: **https://localhost:3000**
+
+### Connect Your Wallet
+
+Choose one of three connection modes:
+
+1. **Create New Wallet** - Generate a new Stellar keypair
+2. **Import Existing Wallet** - Import using your secret key (S...)
+3. **Connect Read-Only** - View campaigns using public key (G...)
 
 ### Build Smart Contract
 
@@ -270,16 +279,16 @@ Perk: Signed digital copy at 200 XLM
 ## 📊 Project Status
 
 ```
-✅ Smart Contract:     100% Complete (Deployed)
-✅ Backend Logic:      100% Complete
-✅ Wallet Integration: 100% Complete
-✅ Error Handling:     100% Complete
-✅ Documentation:      100% Complete (60KB+)
-⏳ UI Components:      In Development
-⏳ Demo Testing:       Pending asset creation
+✅ Smart Contract:        100% Complete (Deployed)
+✅ Standalone Wallet:     100% Complete (3 connection modes)
+✅ Backend Logic:         100% Complete
+✅ Error Handling:        100% Complete
+✅ Documentation:         100% Complete (Professional)
+⏳ Campaign UI:           In Development
+⏳ Demo Testing:          Pending asset creation
 ```
 
-**Current Phase:** Backend complete, UI implementation in progress
+**Current Phase:** Standalone wallet complete, campaign UI implementation in progress
 
 ---
 
