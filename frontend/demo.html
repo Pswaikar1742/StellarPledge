@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StellarPledge - DEMO MODE</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .demo-controls {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .demo-controls h2 {
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .demo-step {
+            background: white;
+            color: #333;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .demo-step h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .demo-step .narrative {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .demo-step button {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+        
+        .demo-step.completed {
+            opacity: 0.7;
+            border-left-color: #28a745;
+        }
+        
+        .demo-step.active {
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        .persona-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #f0f4ff;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        
+        .persona-icon {
+            font-size: 2rem;
+        }
+        
+        .campaign-display {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .campaign-display h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .stat-card strong {
+            display: block;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .big-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>⭐ StellarPledge - DEMO MODE 🎬</h1>
+            <p class="tagline">Happy Path Demonstration</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="demo-controls card">
+            <h2>🎭 Demo Narrative Control Panel</h2>
+            <p style="margin-bottom: 20px;">Follow Alice, Bob, and Charlie through their crowdfunding journey!</p>
+            
+            <!-- Step 1: Alice Creates Campaign -->
+            <div class="demo-step" id="step1">
+                <h3>Step 1: The Launch 🚀</h3>
+                <div class="persona-info">
+                    <span class="persona-icon">👩‍🎨</span>
+                    <div>
+                        <strong>Alice - The Creator</strong>
+                        <div style="font-size: 0.9rem; color: #666;">Independent filmmaker</div>
+                    </div>
+                </div>
+                <div class="narrative">
+                    "Our story begins with Alice, a creator who wants to fund her new film. She comes to StellarPledge to start her campaign."
+                </div>
+                <div>
+                    <strong>Goal:</strong> 250 XLM<br>
+                    <strong>Deadline:</strong> 720 hours (30 days)
+                </div>
+                <button class="btn btn-primary" onclick="executeStep1()">▶ Execute: Alice Creates Campaign</button>
+            </div>
+
+            <!-- Step 2: Bob Pledges -->
+            <div class="demo-step" id="step2">
+                <h3>Step 2: The First Pledge 💰</h3>
+                <div class="persona-info">
+                    <span class="persona-icon">👨‍💼</span>
+                    <div>
+                        <strong>Bob - Backer #1</strong>
+                        <div style="font-size: 0.9rem; color: #666;">Early supporter and fan</div>
+                    </div>
+                </div>
+                <div class="narrative">
+                    "Now, a fan named Bob finds her project. He loves the idea and decides to make a small pledge of 100 XLM to show his support."
+                </div>
+                <div>
+                    <strong>Pledge Amount:</strong> 100 XLM
+                </div>
+                <button class="btn btn-success" onclick="executeStep2()" disabled>▶ Execute: Bob Pledges 100 XLM</button>
+            </div>
+
+            <!-- Step 3: Charlie Pledges -->
+            <div class="demo-step" id="step3">
+                <h3>Step 3: The Decisive Pledge 🎯</h3>
+                <div class="persona-info">
+                    <span class="persona-icon">👨‍🚀</span>
+                    <div>
+                        <strong>Charlie - Backer #2</strong>
+                        <div style="font-size: 0.9rem; color: #666;">The hero who completes the goal</div>
+                    </div>
+                </div>
+                <div class="narrative">
+                    "The campaign is getting close! Another supporter, Charlie, sees that Alice is just 150 XLM away from her goal. He decides to make the final pledge to ensure the project succeeds."
+                </div>
+                <div>
+                    <strong>Pledge Amount:</strong> 150 XLM
+                </div>
+                <button class="btn btn-success" onclick="executeStep3()" disabled>▶ Execute: Charlie Pledges 150 XLM</button>
+            </div>
+
+            <!-- Step 4: Alice Claims Funds -->
+            <div class="demo-step" id="step4">
+                <h3>Step 4: The Payoff 🎉</h3>
+                <div class="persona-info">
+                    <span class="persona-icon">👩‍🎨</span>
+                    <div>
+                        <strong>Alice - The Creator (Returns)</strong>
+                        <div style="font-size: 0.9rem; color: #666;">Ready to claim her funds</div>
+                    </div>
+                </div>
+                <div class="narrative">
+                    "Success! Because the campaign reached its goal, the smart contract has automatically unlocked the funds. Alice can now claim her entire raised amount of 250 XLM, instantly and with zero platform fees."
+                </div>
+                <button class="btn btn-primary" onclick="executeStep4()" disabled>▶ Execute: Alice Claims 250 XLM</button>
+            </div>
+        </div>
+
+        <!-- Campaign Display -->
+        <div class="campaign-display card">
+            <h2>📊 Live Campaign Status</h2>
+            <div id="campaign-info">
+                <p class="empty-state">Waiting for Alice to create the campaign...</p>
+            </div>
+        </div>
+
+        <!-- Status Messages -->
+        <div id="status-messages"></div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Built on <strong>Stellar Testnet</strong> with ❤️</p>
+            <p class="contract-info">Contract: <code>CBBHYAHLF4FJWFMIX4ZZTGVWVL3M452TI4REVYJ64U6WGOKR2VFWOBO7</code></p>
+        </div>
+    </footer>
+
+    <!-- Load stellar-sdk from node_modules -->
+    <script src="node_modules/stellar-sdk/dist/stellar-sdk.js"></script>
+    <script src="demo.js"></script>
+</body>
+</html>
