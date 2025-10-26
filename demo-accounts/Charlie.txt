@@ -1,0 +1,77 @@
+# Charlie - Investor Backer# Charlie - The High Backer (Investor)
+
+
+
+**Role:** Funder## Account Details
+
+**Email:** charlie@example.comPublic Key: GC4GCLLQEERQXIHNYITVQINGT54UK3ZPHR5ACC6QKS2TKVS4YL3X7YVP
+
+**Password:** charlie123Secret Key: [To be added - User should get from Stellar Lab]
+
+
+
+## Stellar Account (Testnet)## Role
+
+- Makes large pledges to campaigns
+
+**Public Key:** GDBJQHQXXQXJ2AU55VFGWSQRLHPOKQTDVIPZAEVQ6T3V2UEXWZXH33Y- Receives automated perk rewards
+
+- Supports creators with substantial backing
+
+**View on Stellar Expert:**
+
+https://stellar.expert/explorer/testnet/account/GDBJQHQXXQXJ2AU55VFGWSQRLHPOKQTDVIPZAEVQ6T3V2UEXWZXH33Y## Stellar Expert
+
+https://stellar.expert/explorer/testnet/account/GC4GCLLQEERQXIHNYITVQINGT54UK3ZPHR5ACC6QKS2TKVS4YL3X7YVP
+
+**Initial Funding:** 10,000 XLM (testnet)
+
+## Use Case
+
+## Demo ScenarioCharlie is an investor who makes larger contributions to promising projects.
+
+He will pledge 500 XLM to Alice's campaign and automatically receive 1 FILMCREDIT token.
+
+Charlie is an angel investor who believes in supporting creative projects and wants exclusive perks.
+
+**Pledge Amount:** 500 XLM (or more)
+**Result:** 🎉 AUTOMATIC REWARD! Gets 1 FILMCREDIT token instantly via smart contract
+
+## Characteristics
+
+- High-value backer
+- Interested in exclusive perks
+- Demonstrates automated reward distribution
+- Shows the "wow factor" of instant on-chain rewards
+
+## Usage in Demo
+
+1. Login as Charlie (charlie@example.com / charlie123)
+2. Connect wallet (or create new wallet)
+3. Browse campaigns in Campaign Gallery
+4. View Alice's campaign details
+5. Make a pledge of 500 XLM (exactly at threshold)
+6. 🎉 **Watch the magic:** Toast notification shows "You earned 1 FILMCREDIT token!"
+7. View backed campaigns in Funder Dashboard
+
+## Key Demonstration Point - THE WOW MOMENT! ⭐
+
+Charlie's pledge demonstrates the **CORE INNOVATION**:
+
+### What Happens in ONE Transaction:
+1. **500 XLM** → Campaign escrow (normal pledge)
+2. **1 FILMCREDIT token** → Charlie's wallet (AUTOMATIC via smart contract!)
+
+### Why This is Revolutionary:
+- ✅ **No manual fulfillment** - Creator doesn't need to send rewards later
+- ✅ **Instant gratification** - Backer gets reward immediately
+- ✅ **On-chain proof** - All verifiable on stellar.expert
+- ✅ **Cross-contract magic** - Smart contract calls Stellar Asset Contract automatically
+
+### Verify on Stellar Expert:
+After Charlie's pledge, check the transaction on stellar.expert:
+- You'll see TWO operations in ONE transaction
+- Operation 1: XLM payment (Charlie → Campaign)
+- Operation 2: FILMCREDIT transfer (Alice → Charlie) - AUTOMATED!
+
+**This is what makes StellarPledge unique!** 🚀

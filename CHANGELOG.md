@@ -17,10 +17,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### 🧹 Repository Cleanup
 - ✅ Removed temporary fix guides and duplicate documentation
 - ✅ Removed old `/docs` folder (consolidated into `/documentation`)
-- ✅ Removed demo-accounts folder (info in documentation)
 - ✅ Cleaned up root directory files
 - ✅ Organized documentation structure
 - ✅ Added MIT License file
+
+### 📝 Documentation Updates
+- ✅ Restored `/demo-accounts` folder with detailed account info
+- ✅ Fixed README.md duplicate content
+- ✅ Updated README to version 1.0.1
+- ✅ Added demo account scenarios and usage instructions
+- ✅ Improved project structure documentation
 
 ---
 

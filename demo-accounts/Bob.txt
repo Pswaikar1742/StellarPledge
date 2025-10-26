@@ -1,0 +1,63 @@
+# Bob - Student Backer# Bob - The Small Backer (Student)
+
+
+
+**Role:** Funder## Account Details
+
+**Email:** bob@example.comPublic Key: GD4I6Y3FQW3PTNQAVP223YOFLHE66GTORJRGD55FWPZXI5SNCPU6NZNX
+
+**Password:** bob123Secret Key: [To be added - User should get from Stellar Lab]
+
+
+
+## Stellar Account (Testnet)## Role
+
+- Discovers campaigns on StellarPledge
+
+**Public Key:** GBQH2XFDW4DWK6QDNHD7DKABCJV3BLRTEDMWUMSRPFNECR6GVGPPNDE- Makes smaller pledges (100-200 XLM)
+
+- Gets refund if campaign fails
+
+**View on Stellar Expert:**
+
+https://stellar.expert/explorer/testnet/account/GBQH2XFDW4DWK6QDNHD7DKABCJV3BLRTEDMWUMSRPFNECR6GVGPPNDE## Stellar Expert
+
+https://stellar.expert/explorer/testnet/account/GD4I6Y3FQW3PTNQAVP223YOFLHE66GTORJRGD55FWPZXI5SNCPU6NZNX
+
+**Initial Funding:** 10,000 XLM (testnet)
+
+## Use Case
+
+## Demo ScenarioBob is a student who supports creators with modest contributions.
+
+He will pledge 100 XLM to Alice's campaign (below perk threshold).
+
+Bob is a film student who loves independent cinema. He has a modest budget but wants to support Alice's project.
+
+**Pledge Amount:** 100 XLM
+**Result:** Below the 500 XLM perk threshold - no reward token, but still a valuable supporter!
+
+## Characteristics
+
+- Budget-conscious backer
+- Passionate about indie films
+- Demonstrates that small pledges count
+- Shows that not every backer gets perks (threshold-based)
+
+## Usage in Demo
+
+1. Login as Bob (bob@example.com / bob123)
+2. Connect wallet (or create new wallet)
+3. Browse campaigns in Campaign Gallery
+4. View Alice's campaign details
+5. Make a pledge of 100 XLM
+6. See pledge recorded but no perk earned (below threshold)
+7. View backed campaigns in Funder Dashboard
+
+## Key Demonstration Point
+
+Bob's pledge shows that:
+- ✅ Small backers can still support projects
+- ✅ The system records all pledges regardless of size
+- ✅ Perk distribution is automatic but threshold-based
+- ✅ Every contribution helps reach the goal

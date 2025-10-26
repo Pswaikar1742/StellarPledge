@@ -1,0 +1,64 @@
+# Alice - Film Creator# Alice - The Creator (Film Director)
+
+
+
+**Role:** Creator## Account Details
+
+**Email:** alice@example.comPublic Key: GDMT3KZ3Q4S5YKPBCI7BGJB5H3ST7GF2IFRJVU34WEIE5UX5NZTW5FTF
+
+**Password:** alice123Secret Key: SAH6ZOC6X4PVOHU7NQQ25KVWI2AGAHALTXI3N7UF4DLYUYJAJF22I7IF
+
+
+
+## Stellar Account (Testnet)## Balance
+
+9,999.4180146 XLM (as of Oct 25, 2025)
+
+**Public Key:** GA4NSVMAWCZYTM26UZIAKXR5A7VYWJJSQDJYXFVMQ2PN2MGCDOP5P5TM
+
+## Role
+
+**View on Stellar Expert:**- Creates crowdfunding campaigns
+
+https://stellar.expert/explorer/testnet/account/GA4NSVMAWCZYTM26UZIAKXR5A7VYWJJSQDJYXFVMQ2PN2MGCDOP5P5TM- Issues FILMCREDIT tokens as perk rewards
+
+- Claims successful campaign funds
+
+**Initial Funding:** 10,000 XLM (testnet)
+
+## Stellar Expert
+
+## Demo Scenariohttps://stellar.expert/explorer/testnet/account/GDMT3KZ3Q4S5YKPBCI7BGJB5H3ST7GF2IFRJVU34WEIE5UX5NZTW5FTF
+
+
+
+Alice is an independent filmmaker who wants to fund her sci-fi short film "Chronos Echo". She creates a campaign with:## Use Case
+
+Alice is a film director who wants to raise 10,000 XLM for her sci-fi short film "Chronos Echo".
+
+- **Goal:** 10,000 XLMShe will offer FILMCREDIT tokens to backers who pledge 500+ XLM.
+
+- **Deadline:** 30 days
+- **Perk Tier:** 500 XLM pledge = 1 FILMCREDIT token
+
+She expects to use the funds for:
+- Production equipment rental
+- Post-production editing
+- Marketing and distribution
+
+## Campaign Example
+
+**Title:** Chronos Echo - Sci-Fi Short Film
+**Description:** A mind-bending journey through time about a scientist's final experiment
+**Goal:** 10,000 XLM
+**Deadline:** 30 days from now
+**Reward Threshold:** 500 XLM
+**Reward Token:** FILMCREDIT (1 token per qualified backer)
+
+## Usage in Demo
+
+1. Login as Alice (alice@example.com / alice123)
+2. Connect wallet (or create new wallet)
+3. Create campaign with reward tier
+4. Monitor pledges in Creator Dashboard
+5. Claim funds when goal is reached
