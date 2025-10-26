@@ -78,44 +78,33 @@ const CreateCampaign = () => {
         amount: 0
       } : null;
       
-      console.log('🚀 Creating campaign on blockchain...');
+      // Campaign UI data
+      const campaignData = {
+        title: formData.title,
+        description: formData.description,
+        tokenName: formData.tokenName,
+        tokenCode: formData.tokenCode,
+        tokenSupply: parseInt(formData.tokenSupply) || 0
+      };
+      
+      console.log('✅ Creating campaign (MOCK MODE)...');
       console.log('Goal:', goal, 'XLM');
       console.log('Duration:', deadlineHours, 'hours');
       console.log('Perk threshold:', perk?.threshold || 'None');
       
-      // 🚀 CALL SMART CONTRACT via CampaignContext
-      const campaignId = await handleCreateCampaign(goal, deadlineHours, perk);
+      // ✅ Create campaign in MOCK MODE (no blockchain call yet)
+      const campaignId = await handleCreateCampaign(goal, deadlineHours, perk, campaignData);
       
-      console.log(`✅ Campaign created on blockchain! ID: ${campaignId}`);
+      console.log(`✅ Campaign created (MOCK)! ID: ${campaignId}`);
       
-      // Store additional UI data in localStorage (title, description, images)
-      const uiData = {
-        campaignId,
-        title: formData.title,
-        description: formData.description,
-        creatorName: currentUser.name,
-        creatorPublicKey: publicKey,
-        rewardTier: formData.rewardTier ? {
-          minAmount: parseInt(formData.rewardTier),
-          tokenName: formData.tokenName,
-          tokenCode: formData.tokenCode,
-          tokenSupply: parseInt(formData.tokenSupply)
-        } : null,
-        createdAt: new Date().toISOString()
-      };
-      
-      const storedUI = JSON.parse(localStorage.getItem('stellarpledge_campaign_ui') || '{}');
-      storedUI[campaignId] = uiData;
-      localStorage.setItem('stellarpledge_campaign_ui', JSON.stringify(storedUI));
-      
-      alert(`Campaign created successfully! ID: ${campaignId}\nCheck stellar.expert for transaction details.`);
+      alert(`Campaign created successfully! ID: ${campaignId}\n\nYou can see it in your Creator Dashboard.\nOnce the goal is reached, you can complete the campaign to deploy it on blockchain!`);
       
       // Navigate to dashboard
       navigate('/creator-dashboard');
       
     } catch (error) {
       console.error("❌ Campaign creation failed:", error);
-      alert("Failed to create campaign: " + error.message + "\n\nMake sure your wallet is connected and you have enough XLM for transaction fees.");
+      alert("Failed to create campaign: " + error.message);
     } finally {
       setIsSubmitting(false);
     }

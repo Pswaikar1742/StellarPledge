@@ -150,7 +150,7 @@ documentation/
 
 #### 5. Stellar.Expert Guide 🌐
 - How transactions appear on blockchain explorer
-- Account view walkthrough
+- Account view walkthrough![alt text](image.png)
 - Transaction verification steps
 - Demo integration strategy
 - Real-time blockchain proof

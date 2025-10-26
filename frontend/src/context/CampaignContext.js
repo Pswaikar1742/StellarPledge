@@ -27,22 +27,19 @@ export const CampaignProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   /**
-   * Load a single campaign by ID
+   * Load a single campaign by ID (MOCK MODE - from localStorage)
    */
   const loadCampaign = useCallback(async (campaignId) => {
-    if (!publicKey) {
-      setError("Wallet not connected");
-      return null;
-    }
-
     setIsLoading(true);
     setError(null);
 
     try {
-      const campaign = await getCampaign(publicKey, campaignId);
+      const storedCampaigns = JSON.parse(localStorage.getItem("stellarpledge_campaigns") || "[]");
+      const campaign = storedCampaigns.find(c => c.id === campaignId);
+      
       if (campaign) {
         setCurrentCampaign(campaign);
-        console.log("✅ Campaign loaded:", campaign);
+        console.log("✅ Campaign loaded (MOCK):", campaign);
         return campaign;
       }
       return null;
@@ -53,43 +50,36 @@ export const CampaignProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [publicKey]);
+  }, []);
 
   /**
-   * Load all campaigns (iterate through IDs)
-   * Similar to CratePass's fetchAllPassStatus pattern
+   * Load all campaigns (MOCK MODE - from localStorage)
    */
-  const loadAllCampaigns = useCallback(async (maxCampaigns = 50) => {
-    if (!publicKey) {
-      setError("Wallet not connected");
-      return [];
-    }
-
+  const loadAllCampaigns = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const loadedCampaigns = [];
-      let notFoundCount = 0;
-      const maxNotFound = 5; // Stop after 5 consecutive not found
-
-      for (let i = 0; i < maxCampaigns && notFoundCount < maxNotFound; i++) {
-        try {
-          const campaign = await getCampaign(publicKey, i);
-          if (campaign) {
-            loadedCampaigns.push(campaign);
-            notFoundCount = 0;
+      // Load from localStorage instead of blockchain
+      const storedCampaigns = JSON.parse(localStorage.getItem("stellarpledge_campaigns") || "[]");
+      
+      // Check deadlines and update status
+      const now = Date.now();
+      storedCampaigns.forEach(campaign => {
+        if (campaign.status === 'active' && now > campaign.deadline) {
+          if (campaign.pledged >= campaign.goal) {
+            campaign.status = 'pending_approval';
           } else {
-            notFoundCount++;
+            campaign.status = 'failed';
           }
-        } catch (err) {
-          notFoundCount++;
         }
-      }
-
-      setCampaigns(loadedCampaigns);
-      console.log(`✅ Loaded ${loadedCampaigns.length} campaigns`);
-      return loadedCampaigns;
+      });
+      
+      localStorage.setItem("stellarpledge_campaigns", JSON.stringify(storedCampaigns));
+      
+      setCampaigns(storedCampaigns);
+      console.log(`✅ Loaded ${storedCampaigns.length} campaigns (MOCK)`);
+      return storedCampaigns;
     } catch (err) {
       console.error("Load all campaigns error:", err);
       setError(err.message);
@@ -97,13 +87,13 @@ export const CampaignProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [publicKey]);
+  }, []);
 
   /**
-   * Create a new campaign
-   * Matches CratePass's createPass pattern
+   * Create a new campaign (MOCK MODE - Frontend only)
+   * Blockchain call happens only on "Complete Campaign"
    */
-  const handleCreateCampaign = useCallback(async (goal, deadlineHours, perk = null) => {
+  const handleCreateCampaign = useCallback(async (goal, deadlineHours, perk = null, campaignData = {}) => {
     if (!publicKey) {
       throw new Error("Wallet not connected");
     }
@@ -112,17 +102,38 @@ export const CampaignProvider = ({ children }) => {
     setError(null);
 
     try {
-      const campaignId = await createCampaign(publicKey, goal, deadlineHours, perk);
-      
-      // Store campaign ID in localStorage (like CratePass does)
+      // ✅ MOCK MODE: Create campaign in localStorage (no blockchain call)
       const storedCampaigns = JSON.parse(localStorage.getItem("stellarpledge_campaigns") || "[]");
-      storedCampaigns.push(campaignId);
+      const campaignId = storedCampaigns.length; // Simple ID generation
+      
+      const deadline = Date.now() + (deadlineHours * 60 * 60 * 1000);
+      
+      const newCampaign = {
+        id: campaignId,
+        creator: publicKey,
+        title: campaignData.title || `Campaign ${campaignId}`,
+        description: campaignData.description || '',
+        goal: parseFloat(goal),
+        pledged: 0,
+        backers: 0,
+        deadline: deadline,
+        status: 'active',
+        rewardTier: perk ? {
+          minAmount: perk.threshold,
+          tokenName: campaignData.tokenName || 'TOKEN',
+          tokenCode: campaignData.tokenCode || 'TKN',
+          tokenSupply: campaignData.tokenSupply || 0
+        } : null,
+        perkConfig: perk,
+        pledgesList: [],
+        createdAt: Date.now(),
+        onBlockchain: false // Flag to track if deployed to blockchain
+      };
+      
+      storedCampaigns.push(newCampaign);
       localStorage.setItem("stellarpledge_campaigns", JSON.stringify(storedCampaigns));
 
-      console.log("✅ Campaign created:", campaignId);
-      
-      // Reload campaigns list
-      await loadAllCampaigns();
+      console.log("✅ Campaign created (MOCK):", campaignId);
       
       return campaignId;
     } catch (err) {
@@ -132,11 +143,10 @@ export const CampaignProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [publicKey, loadAllCampaigns]);
+  }, [publicKey]);
 
   /**
-   * Make a pledge to a campaign
-   * Matches CratePass's approvePass/expirePass pattern
+   * Make a pledge to a campaign (MOCK MODE - Frontend only)
    */
   const handlePledge = useCallback(async (campaignId, amount) => {
     if (!publicKey) {
@@ -147,17 +157,41 @@ export const CampaignProvider = ({ children }) => {
     setError(null);
 
     try {
-      await pledge(publicKey, campaignId, amount, NATIVE_XLM_ADDRESS);
+      // ✅ MOCK MODE: Update campaign in localStorage
+      const storedCampaigns = JSON.parse(localStorage.getItem("stellarpledge_campaigns") || "[]");
+      const campaign = storedCampaigns.find(c => c.id === campaignId);
       
-      // Store pledge in localStorage
+      if (!campaign) {
+        throw new Error("Campaign not found");
+      }
+      
+      // Update campaign
+      campaign.pledged = (campaign.pledged || 0) + parseFloat(amount);
+      campaign.backers = (campaign.backers || 0) + 1;
+      
+      // Add to pledges list
+      if (!campaign.pledgesList) campaign.pledgesList = [];
+      campaign.pledgesList.push({
+        backer: publicKey,
+        amount: parseFloat(amount),
+        timestamp: Date.now()
+      });
+      
+      // Update status if goal reached
+      if (campaign.pledged >= campaign.goal) {
+        campaign.status = 'pending_approval'; // Waiting for creator to complete
+      }
+      
+      // Save back
+      storedCampaigns[campaignId] = campaign;
+      localStorage.setItem("stellarpledge_campaigns", JSON.stringify(storedCampaigns));
+
+      // Store pledge in user's pledge history
       const storedPledges = JSON.parse(localStorage.getItem(`stellarpledge_pledges_${publicKey}`) || "[]");
       storedPledges.push({ campaignId, amount, timestamp: Date.now() });
       localStorage.setItem(`stellarpledge_pledges_${publicKey}`, JSON.stringify(storedPledges));
 
-      console.log("✅ Pledge successful:", campaignId, amount);
-      
-      // Reload campaign to get updated state
-      await loadCampaign(campaignId);
+      console.log("✅ Pledge successful (MOCK):", campaignId, amount);
       
       return true;
     } catch (err) {
@@ -167,10 +201,66 @@ export const CampaignProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [publicKey, loadCampaign]);
+  }, [publicKey]);
 
   /**
-   * Claim funds from successful campaign
+   * Complete Campaign - Deploy to blockchain and claim funds
+   * THIS is where the blockchain transaction happens!
+   */
+  const handleCompleteCampaign = useCallback(async (campaignId) => {
+    if (!publicKey) {
+      throw new Error("Wallet not connected");
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Get campaign from localStorage
+      const storedCampaigns = JSON.parse(localStorage.getItem("stellarpledge_campaigns") || "[]");
+      const campaign = storedCampaigns.find(c => c.id === campaignId);
+      
+      if (!campaign) {
+        throw new Error("Campaign not found");
+      }
+      
+      if (campaign.status !== 'pending_approval') {
+        throw new Error("Campaign must reach its goal first");
+      }
+      
+      // 🚀 NOW deploy to blockchain
+      console.log("🚀 Deploying campaign to Stellar blockchain...");
+      
+      const deadlineHours = Math.max(1, Math.floor((campaign.deadline - Date.now()) / (1000 * 60 * 60)));
+      const blockchainCampaignId = await createCampaign(
+        publicKey,
+        campaign.goal,
+        deadlineHours,
+        campaign.perkConfig
+      );
+      
+      console.log(`✅ Campaign deployed to blockchain! ID: ${blockchainCampaignId}`);
+      
+      // Update campaign status
+      campaign.status = 'successful';
+      campaign.onBlockchain = true;
+      campaign.blockchainId = blockchainCampaignId;
+      
+      storedCampaigns[campaignId] = campaign;
+      localStorage.setItem("stellarpledge_campaigns", JSON.stringify(storedCampaigns));
+      
+      return blockchainCampaignId;
+    } catch (err) {
+      console.error("Complete campaign error:", err);
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [publicKey]);
+
+  /**
+   * Claim funds from successful campaign (MOCK MODE)
    */
   const handleClaimFunds = useCallback(async (campaignId) => {
     if (!publicKey) {
@@ -181,11 +271,18 @@ export const CampaignProvider = ({ children }) => {
     setError(null);
 
     try {
-      await claimFunds(publicKey, campaignId, NATIVE_XLM_ADDRESS);
-      console.log("✅ Funds claimed:", campaignId);
+      // For now, just update status in localStorage
+      // In production, this would call claimFunds(publicKey, campaignId, NATIVE_XLM_ADDRESS)
+      const storedCampaigns = JSON.parse(localStorage.getItem("stellarpledge_campaigns") || "[]");
+      const campaign = storedCampaigns.find(c => c.id === campaignId);
       
-      // Reload campaign to get updated state
-      await loadCampaign(campaignId);
+      if (campaign) {
+        campaign.status = 'successful';
+        storedCampaigns[campaignId] = campaign;
+        localStorage.setItem("stellarpledge_campaigns", JSON.stringify(storedCampaigns));
+      }
+      
+      console.log("✅ Funds claimed (MOCK):", campaignId);
       
       return true;
     } catch (err) {
@@ -195,7 +292,7 @@ export const CampaignProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [publicKey, loadCampaign]);
+  }, [publicKey]);
 
   /**
    * Withdraw refund from failed campaign
@@ -251,6 +348,7 @@ export const CampaignProvider = ({ children }) => {
     handleCreateCampaign,
     handlePledge,
     handleClaimFunds,
+    handleCompleteCampaign, // NEW: Deploy to blockchain
     handleWithdrawRefund,
     getUserCreatedCampaigns,
     getUserBackedCampaigns,
