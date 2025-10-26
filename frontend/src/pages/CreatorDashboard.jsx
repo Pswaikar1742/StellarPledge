@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Plus, TrendingUp, Clock, CheckCircle, Wallet as WalletIcon } from 'lucide-react';
+import { Plus, TrendingUp, Clock, CheckCircle, Wallet as WalletIcon, Sparkles } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { useWallet } from '../context/WalletContext';
+import { useCampaign } from '../context/CampaignContext';
 
 const CreatorDashboard = () => {
   const navigate = useNavigate();
-  const { isConnected } = useWallet();
+  const { isConnected, publicKey } = useWallet();
+  const { campaigns, loadAllCampaigns, getUserCreatedCampaigns, isLoading } = useCampaign();
   const [currentUser, setCurrentUser] = useState(null);
-  const [campaigns, setCampaigns] = useState([]);
+  const [userCampaigns, setUserCampaigns] = useState([]);
 
   useEffect(() => {
     // Check if user is logged in
-    const loadUserData = () => {
+    const loadUserData = async () => {
       const user = JSON.parse(localStorage.getItem('stellarpledge_current_user'));
       if (!user) {
         navigate('/login');
@@ -28,10 +30,29 @@ const CreatorDashboard = () => {
       
       setCurrentUser(user);
 
-      // Load user's campaigns from localStorage
-      const allCampaigns = JSON.parse(localStorage.getItem('stellarpledge_campaigns') || '[]');
-      const userCampaigns = allCampaigns.filter(c => c.creatorId === user.id);
-      setCampaigns(userCampaigns);
+      // 🚀 LOAD CAMPAIGNS FROM BLOCKCHAIN
+      if (publicKey) {
+        console.log('📡 Loading campaigns from blockchain...');
+        await loadAllCampaigns();
+        
+        // Filter user's campaigns
+        const myCampaigns = getUserCreatedCampaigns();
+        
+        // Enhance with UI data from localStorage
+        const uiData = JSON.parse(localStorage.getItem('stellarpledge_campaign_ui') || '{}');
+        const enhanced = myCampaigns.map(campaign => ({
+          ...campaign,
+          title: uiData[campaign.id]?.title || 'Untitled Campaign',
+          description: uiData[campaign.id]?.description || '',
+          creatorName: uiData[campaign.id]?.creatorName || user.name,
+          daysLeft: Math.max(0, Math.floor((campaign.deadline - Date.now() / 1000) / 86400)),
+          backers: campaign.backers ? Object.keys(campaign.backers).length : 0,
+          status: campaign.state === 0 ? 'active' : campaign.state === 1 ? 'successful' : 'failed'
+        }));
+        
+        setUserCampaigns(enhanced);
+        console.log(`✅ Loaded ${enhanced.length} campaigns from blockchain`);
+      }
     };
 
     loadUserData();
@@ -42,7 +63,7 @@ const CreatorDashboard = () => {
     return () => {
       window.removeEventListener('user-login', loadUserData);
     };
-  }, [navigate]);
+  }, [navigate, publicKey, loadAllCampaigns, getUserCreatedCampaigns]);
 
   const handleConnectWallet = () => {
     // Trigger wallet connection modal from header
@@ -55,25 +76,25 @@ const CreatorDashboard = () => {
   const stats = [
     {
       label: "Active Campaigns",
-      value: campaigns.filter(c => c.status === 'active').length,
+      value: userCampaigns.filter(c => c.status === 'active').length,
       icon: TrendingUp,
       color: "text-accent"
     },
     {
       label: "Pending Approval",
-      value: campaigns.filter(c => c.status === 'pending').length,
+      value: userCampaigns.filter(c => c.status === 'pending').length,
       icon: Clock,
       color: "text-yellow-500"
     },
     {
       label: "Successful",
-      value: campaigns.filter(c => c.status === 'successful').length,
+      value: userCampaigns.filter(c => c.status === 'successful').length,
       icon: CheckCircle,
       color: "text-green-500"
     },
     {
       label: "Total Raised",
-      value: `${campaigns.reduce((sum, c) => sum + c.pledged, 0)} XLM`,
+      value: `${userCampaigns.reduce((sum, c) => sum + (c.pledged || 0), 0).toFixed(2)} XLM`,
       icon: TrendingUp,
       color: "text-accent"
     }
@@ -168,9 +189,13 @@ const CreatorDashboard = () => {
         </motion.div>
 
         {/* Campaigns List */}
-        {campaigns.length > 0 ? (
+        {isLoading ? (
+          <div className="text-center py-12 bg-card rounded-2xl border border-border">
+            <p className="text-muted-foreground">Loading campaigns from blockchain...</p>
+          </div>
+        ) : userCampaigns.length > 0 ? (
           <div className="grid grid-cols-1 gap-6">
-            {campaigns.map((campaign, index) => (
+            {userCampaigns.map((campaign, index) => (
               <motion.div
                 key={campaign.id}
                 initial={{ opacity: 0, y: 20 }}

@@ -6,12 +6,15 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { useWallet } from '../context/WalletContext';
+import { useCampaign } from '../context/CampaignContext';
 
 const CreateCampaign = () => {
   const navigate = useNavigate();
   const { isConnected, publicKey } = useWallet();
+  const { handleCreateCampaign, isLoading: contractLoading } = useCampaign();
   const [currentUser, setCurrentUser] = useState(null);
   const [step, setStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -55,38 +58,67 @@ const CreateCampaign = () => {
     }
   };
 
-  const handleSubmit = () => {
-    // Get existing campaigns
-    const campaigns = JSON.parse(localStorage.getItem('stellarpledge_campaigns') || '[]');
+  const handleSubmit = async () => {
+    if (!publicKey) {
+      alert('Please connect your wallet first');
+      return;
+    }
+
+    setIsSubmitting(true);
     
-    // Create new campaign
-    const newCampaign = {
-      id: Date.now(),
-      creatorId: currentUser.id,
-      creatorName: currentUser.name,
-      creatorPublicKey: publicKey,
-      title: formData.title,
-      description: formData.description,
-      goal: parseInt(formData.goal),
-      pledged: 0,
-      backers: 0,
-      daysLeft: parseInt(formData.duration),
-      status: 'active',
-      rewardTier: {
-        minAmount: parseInt(formData.rewardTier),
-        tokenName: formData.tokenName,
-        tokenCode: formData.tokenCode,
-        tokenSupply: parseInt(formData.tokenSupply)
-      },
-      pledges: [],
-      createdAt: new Date().toISOString()
-    };
-
-    campaigns.push(newCampaign);
-    localStorage.setItem('stellarpledge_campaigns', JSON.stringify(campaigns));
-
-    // Redirect to creator dashboard
-    navigate('/creator-dashboard');
+    try {
+      // Parse form data
+      const goal = parseFloat(formData.goal);
+      const deadlineHours = parseInt(formData.duration) * 24; // convert days to hours
+      
+      // Optional perk configuration
+      const perk = formData.rewardTier ? {
+        threshold: parseFloat(formData.rewardTier),
+        assetAddress: null, // No perk tokens for now (can add later)
+        amount: 0
+      } : null;
+      
+      console.log('🚀 Creating campaign on blockchain...');
+      console.log('Goal:', goal, 'XLM');
+      console.log('Duration:', deadlineHours, 'hours');
+      console.log('Perk threshold:', perk?.threshold || 'None');
+      
+      // 🚀 CALL SMART CONTRACT via CampaignContext
+      const campaignId = await handleCreateCampaign(goal, deadlineHours, perk);
+      
+      console.log(`✅ Campaign created on blockchain! ID: ${campaignId}`);
+      
+      // Store additional UI data in localStorage (title, description, images)
+      const uiData = {
+        campaignId,
+        title: formData.title,
+        description: formData.description,
+        creatorName: currentUser.name,
+        creatorPublicKey: publicKey,
+        rewardTier: formData.rewardTier ? {
+          minAmount: parseInt(formData.rewardTier),
+          tokenName: formData.tokenName,
+          tokenCode: formData.tokenCode,
+          tokenSupply: parseInt(formData.tokenSupply)
+        } : null,
+        createdAt: new Date().toISOString()
+      };
+      
+      const storedUI = JSON.parse(localStorage.getItem('stellarpledge_campaign_ui') || '{}');
+      storedUI[campaignId] = uiData;
+      localStorage.setItem('stellarpledge_campaign_ui', JSON.stringify(storedUI));
+      
+      alert(`Campaign created successfully! ID: ${campaignId}\nCheck stellar.expert for transaction details.`);
+      
+      // Navigate to dashboard
+      navigate('/creator-dashboard');
+      
+    } catch (error) {
+      console.error("❌ Campaign creation failed:", error);
+      alert("Failed to create campaign: " + error.message + "\n\nMake sure your wallet is connected and you have enough XLM for transaction fees.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!currentUser) return null;
@@ -359,9 +391,9 @@ const CreateCampaign = () => {
                 <Button
                   onClick={handleSubmit}
                   className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90 font-bold"
-                  disabled={!formData.rewardTier || !formData.tokenName || !formData.tokenCode || !formData.tokenSupply}
+                  disabled={!formData.rewardTier || !formData.tokenName || !formData.tokenCode || !formData.tokenSupply || isSubmitting || contractLoading}
                 >
-                  Launch Campaign 🚀
+                  {isSubmitting || contractLoading ? 'Creating on Blockchain...' : 'Launch Campaign 🚀'}
                 </Button>
               </div>
             </div>
