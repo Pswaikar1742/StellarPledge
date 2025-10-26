@@ -1,76 +1,38 @@
-# 🌟 StellarPledge# 🌟 StellarPledge# 🌟 StellarPledge
-
-
+# 🌟 StellarPledge
 
 **The Automated Creator Economy Protocol on Stellar Blockchain**
 
-
-
-[![Stellar](https://img.shields.io/badge/Stellar-Testnet-blue)](https://stellar.org)**The Automated Creator Economy Protocol on Stellar Blockchain****The Automated Creator Economy Protocol on Stellar Blockchain**
-
+[![Stellar](https://img.shields.io/badge/Stellar-Testnet-blue)](https://stellar.org)
 [![Soroban](https://img.shields.io/badge/Soroban-Smart%20Contracts-purple)](https://soroban.stellar.org)
-
 [![React](https://img.shields.io/badge/React-19.0-61DAFB)](https://reactjs.org)
-
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-
-[![Stellar](https://img.shields.io/badge/Stellar-Testnet-blue)](https://stellar.org)[![Stellar](https://img.shields.io/badge/Stellar-Testnet-blue)](https://stellar.org)
 
 > Transform crowdfunding with automated reward distribution, trustless blockchain execution, and zero platform fees.
 
-[![Soroban](https://img.shields.io/badge/Soroban-Smart%20Contracts-purple)](https://soroban.stellar.org)[![Soroban](https://img.shields.io/badge/Soroban-Smart%20Contracts-purple)](https://soroban.stellar.org)
-
 Built for the **Stellar Build-a-thon** 🚀
-
-[![React](https://img.shields.io/badge/React-19.0-61DAFB)](https://reactjs.org)[![React](https://img.shields.io/badge/React-19.0-61DAFB)](https://reactjs.org)
-
----
-
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ## 🎯 Overview
 
-
-
 StellarPledge is a decentralized crowdfunding platform that leverages Stellar's blockchain and Soroban smart contracts to enable **automated perk distribution** - our core innovation that eliminates manual reward fulfillment.
-
-> Transform crowdfunding with automated reward distribution, trustless blockchain execution, and zero platform fees.> Transform crowdfunding with automated reward distribution, trustless blockchain execution, and zero platform fees.
 
 ### The Problem
 
-
-
 Traditional crowdfunding platforms have:
-
-- ❌ High platform fees (5-10%)Built for the **Stellar Build-a-thon** 🚀Built for the **Stellar Build-a-thon** 🚀
-
+- ❌ High platform fees (5-10%)
 - ❌ Centralized control of funds
-
 - ❌ Manual reward distribution (weeks/months delay)
-
 - ❌ Limited transparency
-
-- ❌ Trust-based intermediaries------
-
-
+- ❌ Trust-based intermediaries
 
 ### Our Solution
 
-
-
-- ✅ Zero platform fees (only network costs ~$0.01)## 🎯 The Problem## 🎯 Overview
-
+- ✅ Zero platform fees (only network costs ~$0.01)
 - ✅ Decentralized smart contract escrow
-
 - ✅ **Automatic reward distribution in real-time**
-
 - ✅ Complete on-chain transparency
+- ✅ Trustless execution
 
-- ✅ Trustless executionTraditional crowdfunding platforms have:StellarPledge is a decentralized crowdfunding platform that leverages Stellar's blockchain and Soroban smart contracts to enable **automated perk distribution** - our core innovation that eliminates manual reward fulfillment.
-
-
-
----- ❌ High platform fees (5-10%)
+## 🚀 Key Features
 
 
 
@@ -86,55 +48,33 @@ Traditional crowdfunding platforms have:
 
 
 
-- **Create New Wallet** - Generate Stellar keypair in-app- ❌ Trust-based intermediaries- ❌ Centralized control of funds
+### 🔐 Standalone Wallet System
 
+**No browser extensions required!**
+- **Create New Wallet** - Generate Stellar keypair in-app
 - **Import Wallet** - Use existing secret key (S...)
-
-- **Read-Only Mode** - Browse with public key (G...)- ❌ Manual reward distribution (weeks/months delay)
-
+- **Read-Only Mode** - Browse with public key (G...)
 - **Secure Encryption** - Password-protected local storage
-
-## ✨ Our Solution- ❌ Limited transparency
 
 **[Read Standalone Wallet Documentation →](./docs/STANDALONE-WALLET.md)**
 
-
-
 ### 🎁 Core Innovation: Automated On-Chain Perks
-
-**StellarPledge** is a decentralized crowdfunding platform leveraging Stellar blockchain with:### Our Solution
 
 When a backer pledges enough to meet the perk threshold, the smart contract **automatically** triggers a cross-contract call to transfer reward tokens (any Stellar Classic Asset) to the backer - all in one atomic transaction!
 
-- ✅ Zero platform fees (only network costs ~$0.01)- ✅ Zero platform fees (only network costs ~$0.01)
-
 **Example:**
 
-- ✅ Decentralized smart contract escrow- ✅ Decentralized smart contract escrow
-
 ```
+Alice creates campaign: 10,000 XLM goal, 500 XLM perk threshold → 1 FILMCREDIT token reward
 
-Alice creates campaign: 10,000 XLM goal, 500 XLM perk threshold → 1 FILMCREDIT token reward- ✅ **Automatic reward distribution in real-time** (Core Innovation!)- ✅ **Automatic reward distribution in real-time**
+Bob pledges 100 XLM → No perk (below threshold)
 
-
-
-Bob pledges 100 XLM → No perk (below threshold)- ✅ Complete on-chain transparency- ✅ Complete on-chain transparency
-
-
-
-Charlie pledges 500 XLM → 🎉 INSTANT: Gets 1 FILMCREDIT automatically!- ✅ Trustless execution
-
+Charlie pledges 500 XLM → 🎉 INSTANT: Gets 1 FILMCREDIT automatically!
 ```
-
----
 
 **Result:** Two operations in ONE transaction:
-
-1. 500 XLM → Campaign escrow---
-
+1. 500 XLM → Campaign escrow
 2. 1 FILMCREDIT → Charlie's wallet (automatic!)
-
-## ✨ Key Features
 
 ---
 
@@ -158,55 +98,37 @@ Charlie pledges 500 XLM → 🎉 INSTANT: Gets 1 FILMCREDIT automatically!- ✅ 
 
 - 🔐 **Secure Wallet Integration**: Create or import Stellar wallets
 
-- **Import Wallet** - Use existing secret key (S...)- **Read-Only Mode** - Browse with public key (G...)
+### For Creators
+
+- 📝 **Campaign Creation Wizard**: Easy 3-step process
+- 🎁 **Configurable Rewards**: Set threshold-based token rewards
+- 📊 **Real-Time Analytics**: Track pledges, backers, and progress
+- 💰 **Instant Fund Access**: Claim funds when goal is met
+- 🔐 **Secure Wallet Integration**: Create or import Stellar wallets
 
 ### For Funders
 
-- **Read-Only Mode** - Browse with public key (G...)- **Secure Encryption** - Password-protected local storage
-
 - 🔍 **Campaign Discovery**: Browse active campaigns
-
-- 💎 **Reward Preview**: See eligible rewards before pledging- **Secure Encryption** - Password-protected local storage
-
+- 💎 **Reward Preview**: See eligible rewards before pledging
 - ⚡ **Instant Pledges**: Blockchain-fast transactions
-
 - 🏆 **Automatic Rewards**: Receive tokens at threshold
-
 - 📈 **Portfolio Tracking**: View all backed campaigns
 
-### 🎁 Automated Perk Distribution (Core Innovation ⭐)
+### � Modern UI/UX
 
-### Technical Innovation
-
-When a backer pledges enough to meet the perk threshold, the smart contract **automatically** triggers a cross-contract call to transfer reward tokens - all in ONE atomic transaction!### Why StellarPledge?**[Read Standalone Wallet Documentation →](./docs/STANDALONE-WALLET.md)**
-
-- 🤖 **Smart Contract Automation**: Cross-contract token transfers
-
-- 🔄 **Event-Driven Architecture**: Real-time multi-user updates
-
-- 🎨 **Modern UI/UX**: Tailwind CSS with Framer Motion animations
-
-- 📱 **Responsive Design**: Works on all devices**Example Flow:**
-
+- 🎨 **Modern Design**: Tailwind CSS + Framer Motion
+- 📱 **Responsive Design**: Works on all devices
 - 🌓 **Dark/Light Mode**: User preference support
-
-```
-
----
-
-Alice creates campaign:**Traditional Crowdfunding:**### 👥 Role-Based Access
+- 🔔 **Real-time Updates**: Toast notifications
+- 🎯 **Intuitive Interface**: Step-by-step wizards
 
 ## 🚀 Quick Start
 
-  Goal: 10,000 XLM
-
 ### Prerequisites
 
-  Perk threshold: 500 XLM → 1 FILMCREDIT token- ❌ High fees (5-10%)
-
 - Node.js 16+ and npm
-
 - Git
+- Modern web browser (Chrome, Firefox, Edge, Safari)
 
 - Modern web browser (Chrome, Firefox, Edge, Safari)
 
@@ -226,55 +148,40 @@ cd StellarPledge
 
 
 
-# Install frontend dependenciesResult: TWO operations in ONE transaction:- ❌ Centralized control- **Funders** - Back projects and earn tokenized rewards
+### Installation
 
+```bash
+# Clone the repository
+git clone https://github.com/Pswaikar1742/StellarPledge.git
+cd StellarPledge
+
+# Install frontend dependencies
 cd frontend
+npm install
 
-npm install  1. 500 XLM → Campaign escrow
-
-
-
-# Start development server  2. 1 FILMCREDIT → Charlie's wallet (automatic!)
-
+# Start development server
 npm start
-
-``````
-
-
-
-The app will open at `http://localhost:3000`**StellarPledge:**- **Multi-User Support** - Independent sessions per browser tab## 🚀 The Problem
-
-
-
-### First Time Setup**No manual fulfillment. No delays. All on-chain. Provable.**
-
-
-
-1. **Clear browser storage** (F12 console):- ✅ Minimal fees (<$0.01)
-
-```javascript
-
-localStorage.clear();### 👥 Role-Based Access
-
-location.reload();
-
-```- **Creators** - Launch campaigns with custom reward tiers- ✅ Automated rewards
-
-
-
-2. **Create demo users**:- **Funders** - Back projects and earn tokenized rewards
-
-```javascript
-
-window.setupDemoUsers()- **Multi-User Support** - Independent sessions per browser tab- ✅ Complete transparency
-
 ```
 
+The app will open at `http://localhost:3000`
 
+### First Time Setup
+
+1. **Clear browser storage** (F12 console):
+```javascript
+localStorage.clear();
+location.reload();
+```
+
+2. **Create demo users**:
+```javascript
+window.setupDemoUsers()
+```
 
 3. **Login with demo accounts**:
-
-   - Creator: `alice@example.com` / `alice123`### 🎨 Modern UI/UX- ✅ Decentralized trustless### 💰 Smart Campaign ManagementTraditional crowdfunding platforms are centralized, slow, and expensive. They take significant fees and act as a trusted middleman, creating a barrier between creators and their communities. Reward distribution is manual, error-prone, and can take months.
+   - Creator: `alice@example.com` / `alice123`
+   - Funder: `bob@example.com` / `bob123`
+   - Funder: `charlie@example.com` / `charlie123`
 
    - Funder: `bob@example.com` / `bob123`
 
@@ -290,57 +197,34 @@ window.setupDemoUsers()- **Multi-User Support** - Independent sessions per brows
 
 
 
-```- Real-time toast notifications---- **Goal Setting** - Define funding targets in XLM
+## 📁 Project Structure
 
+```
 StellarPledge/
-
-├── frontend/                # React application- Intuitive campaign creation wizard
-
+├── frontend/                # React application
 │   ├── src/
-
 │   │   ├── components/     # Reusable UI components
-
 │   │   ├── pages/          # Main application pages
-
-│   │   ├── context/        # React Context providers---
-
+│   │   ├── context/        # React Context providers
 │   │   ├── services/       # Stellar/Wallet services
-
-│   │   ├── utils/          # Helper functions## ✨ Key Features- **Deadline Management** - Time-bound campaigns---
-
+│   │   ├── utils/          # Helper functions
 │   │   └── constants/      # Configuration constants
-
-│   └── public/             # Static assets## 🚀 Quick Start
-
+│   └── public/             # Static assets
 │
-
 ├── smart-contract/         # Soroban smart contract
-
 │   ├── src/
-
-│   │   └── lib.rs         # Main contract code### Prerequisites
-
+│   │   └── lib.rs         # Main contract code
 │   └── Cargo.toml         # Rust dependencies
-
-│- Node.js 16+ and npm### For Creators- **Reward Tiers** - Threshold-based token distribution
-
+│
 ├── documentation/          # All documentation
-
-│   ├── demo/              # Demo scripts and guides- Git
-
+│   ├── demo/              # Demo scripts and guides
 │   ├── technical/         # Technical documentation
-
-│   ├── guides/            # User guides- 📝 **Campaign Creation Wizard**: Easy 3-step process
-
+│   ├── guides/            # User guides
 │   └── FINAL_DELIVERY_SUMMARY.md
-
-│### Installation
-
-├── demo-accounts/         # Funded testnet accounts
-
-│   ├── Alice.txt- 🎁 **Configurable Rewards**: Set threshold-based token rewards- **Real-Time Progress** - Live updates across all users## ✨ Our Solution: StellarPledge
-
-│   ├── Bob.txt
+│
+└── demo-accounts/         # Funded testnet accounts
+    ├── Alice.txt
+    ├── Bob.txt
 
 │   └── Charlie.txt```bash
 
@@ -364,53 +248,27 @@ cd StellarPledge- 💰 **Instant Fund Access**: Claim funds when goal is met
 
 # Install frontend dependencies- 🔐 **Secure Wallet Integration**: Create or import Stellar wallets
 
+## 🛠️ Technology Stack
+
+### Frontend
 - **Framework:** React 19.2.0
-
-- **Styling:** Tailwind CSS + Framer Motioncd frontend
-
+- **Styling:** Tailwind CSS + Framer Motion
 - **Blockchain:** Stellar SDK 11.3.0
-
-- **Wallet:** Standalone wallet system (no extensions required)npm install### 🎁 Automated RewardsStellarPledge is a **trustless, open-source protocol** that leverages Soroban smart contracts to act as an automated escrow. By integrating Stellar's native asset issuance, we've transformed crowdfunding into an **automated creator economy**.
-
+- **Wallet:** Standalone wallet system (no extensions required)
 - **SDK:** @stellar/stellar-sdk 11.3.0
-
 - **Security:** AES encryption, password-protected keystores
 
-
-
-### Smart Contract# Start development server### For Funders
-
-
-
-- **Language:** Rustnpm start
-
+### Smart Contract
+- **Language:** Rust
 - **SDK:** Soroban SDK 20.5.0
-
-- **Network:** Stellar Testnet```- 🔍 **Campaign Discovery**: Browse active campaigns- **Token Distribution** - Automatic reward tokens for qualifying pledges
-
-- **Blockchain:** Stellar Testnet (Soroban)
-
-
-
----
-
-The app will open at `http://localhost:3000`- 💎 **Reward Preview**: See eligible rewards before pledging
+- **Network:** Stellar Testnet (Soroban)
 
 ## 🔗 Smart Contract
 
-
-
 **Deployed Smart Contract:**
-
-### First Time Setup- ⚡ **Instant Pledges**: Blockchain-fast transactions- **Threshold Logic** - Smart contract validates pledge amounts### 🎁 Core Innovation: Automated On-Chain Perks
-
 - **Network:** Stellar Testnet
-
-- **Address:** `CCPL64I5DIKB6B57QM5CCUYBQ5RKCH3N4LF4XTQLQAD6JJNJ5JDJEKYP`
-
+- **Contract ID:** `CCPL64I5DIKB6B57QM5CCUYBQ5RKCH3N4LF4XTQLQAD6JJNJ5JDJEKYP`
 - **Explorer:** [View on Stellar Expert](https://stellar.expert/explorer/testnet/contract/CCPL64I5DIKB6B57QM5CCUYBQ5RKCH3N4LF4XTQLQAD6JJNJ5JDJEKYP)
-
-1. **Clear browser storage** (F12 console):- 🏆 **Automatic Rewards**: Receive tokens at threshold
 
 ### Core Functions
 
@@ -440,53 +298,35 @@ get_campaign()     // Retrieve campaign details```
 
 // Automated perk distribution logic```javascript
 
-if let Some(perk) = &campaign.perk {
-
-    if total_backer_pledge >= perk.threshold {window.setupDemoUsers()- 🤖 **Smart Contract Automation**: Cross-contract token transfers
-
-        // Cross-contract call to Stellar Asset Contract
-
-        let perk_token_client = token::Client::new(&env, &perk.asset_address);```
-
-        perk_token_client.transfer(&campaign.creator, &backer, &perk.amount);
-
-        log!("✅ Perk transferred automatically!");- 🔄 **Event-Driven Architecture**: Real-time multi-user updates
-
-    }
-
-}3. **Login with demo accounts**:
-
+```rust
+create_campaign()  // Create new campaign with optional perks
+pledge()           // Pledge with automatic reward distribution
+claim_funds()      // Creator claims funds after success
+withdraw_refund()  // Backer gets refund if campaign fails
+get_campaign()     // Retrieve campaign details
 ```
 
-   - **Alice** (Creator): `alice@example.com` / `alice123`- 🎨 **Modern UI/UX**: Tailwind CSS with Framer Motion animations
-
-**Key Innovation:** Cross-contract calls enable automatic token transfers without manual intervention.
-
-   - **Bob** (Funder): `bob@example.com` / `bob123`
-
----
-
-   - **Charlie** (Funder): `charlie@example.com` / `charlie123`- 📱 **Responsive Design**: Works on all devices### 🎨 Modern UI/UX**Example:**
+### Smart Contract Architecture
+```rust
+// Automated perk distribution logic
+if let Some(perk) = &campaign.perk {
+    if total_backer_pledge >= perk.threshold {
+        // Cross-contract call to Stellar Asset Contract
+        let perk_token_client = token::Client::new(&env, &perk.asset_address);
+        perk_token_client.transfer(&campaign.creator, &backer, &perk.amount);
+        log!("✅ Perk transferred automatically!");
+    }
+}
+```
 
 ## 🎬 Live Demo
 
-
-
 ### Quick Demo (2 minutes)
-
----- 🌓 **Dark/Light Mode**: User preference support
-
 1. Start server: `npm start` in `/frontend`
-
 2. Setup: `window.setupDemoUsers()` in console
-
 3. Alice creates campaign: Goal 6,000 XLM, reward at 3,000 XLM
-
-4. Bob pledges 2,000 XLM: No reward## 📁 Project Structure- **Responsive Design** - Works on all devices```
-
+4. Bob pledges 2,000 XLM: No reward
 5. Charlie pledges 4,000 XLM: Earns reward! 🎉
-
-
 
 ### Full Demo (8-9 minutes)
 
@@ -508,54 +348,32 @@ StellarPledge/
 
 | **Bob** | Backer | GBQH...PNDE | 10,000 XLM |│   │   ├── components/        # UI components## 🚀 Quick Start
 
-| **Charlie** | Backer | GDBJ...H33Y | 10,000 XLM |
+Follow **[Live Demo Script](documentation/demo/LIVE_DEMO_SCRIPT.md)** for complete presentation.
 
-│   │   ├── pages/             # 8 main pages
+### Demo Accounts (Pre-funded Testnet)
+| Name | Role | Public Key | Funding |
+|------|------|------------|---------|
+| **Alice** | Creator | GA4N...P5TM | 10,000 XLM |
+| **Bob** | Backer | GBQH...PNDE | 10,000 XLM |
+| **Charlie** | Backer | GDBJ...H33Y | 10,000 XLM |
 
 **Verify on stellar.expert:** All accounts are live and funded on testnet!
 
-│   │   ├── contexts/          # State management- **Smooth Animations** - Framer Motion poweredBob pledges 100 XLM → No perk (below threshold)
-
----
-
-│   │   ├── services/          # Wallet & Blockchain services
-
 ## 📚 Documentation
 
-│   │   └── utils/             # Helper functions### Prerequisites
-
 ### 🎬 Demo & Presentation
+- **[Live Demo Script](documentation/demo/LIVE_DEMO_SCRIPT.md)** ⭐ - 8-9 minute presentation
+- **[Complete Demo Guide](documentation/demo/COMPLETE_DEMO_GUIDE.md)** - Full walkthrough
+- **[Pre-Demo Checklist](documentation/demo/PRE_DEMO_CHECKLIST.md)** - Setup tasks
 
-│   └── package.json
+### 🔧 Technical Documentation
+- **[System Architecture](documentation/technical/SYSTEM_ARCHITECTURE.md)** - System design
+- **[Smart Contract Architecture](documentation/technical/SMART_CONTRACT_ARCHITECTURE.md)** - Contract details
+- **[Frontend Architecture](documentation/technical/FRONTEND_ARCHITECTURE.md)** - React app structure
+- **[Wallet Balance Guide](documentation/technical/WALLET_BALANCE_GUIDE.md)** - Balance system
 
-- **[Live Demo Script](documentation/demo/LIVE_DEMO_SCRIPT.md)** ⭐ - Copy/paste ready presentation (8-9 min)
-
-- **[Complete Demo Guide](documentation/demo/COMPLETE_DEMO_GUIDE.md)** - Full walkthrough with verification│- **Toast Notifications** - Real-time feedbackCharlie pledges 500 XLM → 🎉 INSTANT: Gets 1 FILMCREDIT automatically!
-
-- **[Pre-Demo Checklist](documentation/demo/PRE_DEMO_CHECKLIST.md)** - Setup before presentation
-
-- **[Demo Changes](documentation/demo/DEMO_CHANGES.md)** - Recent updates├── smart-contract/            # Soroban smart contract
-
-
-
-### 🔧 Technical Documentation│   ├── src/- Node.js 16+ and npm
-
-
-
-- **[Current State Explanation](documentation/technical/CURRENT_STATE_EXPLANATION.md)** - Mock vs Real blockchain│   │   └── lib.rs            # 5 core functions (213 LOC)
-
-- **[Wallet Balance Guide](documentation/technical/WALLET_BALANCE_GUIDE.md)** - Balance system architecture
-
-- **[Real Accounts Integration](documentation/technical/REAL_ACCOUNTS_INTEGRATION.md)** - Testnet integration│   └── Cargo.toml- Git```
-
-
-
-### 📖 User Guides│
-
-
-
-- **[Real Funded Accounts Guide](documentation/guides/REAL_FUNDED_ACCOUNTS_GUIDE.md)** - Using testnet accounts├── documentation/             # 420+ pages of docs
-
+### 📖 User Guides
+- **[Real Funded Accounts Guide](documentation/guides/REAL_FUNDED_ACCOUNTS_GUIDE.md)** - Using testnet accounts
 - **[Testing Guide](documentation/guides/TESTING-GUIDE.md)** - Manual testing instructions
 
 │   ├── demo/                 # Demo scripts
@@ -580,53 +398,28 @@ StellarPledge/
 
 ``````bash**Result:** Two operations in ONE transaction:
 
-**Campaign:** Fund indie film (5,000 XLM goal)  
+## 🎯 Use Cases
 
+### 🎬 Film Production
+**Campaign:** Fund indie film (5,000 XLM goal)  
 **Perk:** Early screening ticket NFT at 1,000 XLM pledge
 
-
-
-### 🎵 Music Album---# Clone the repository
-
-
-
+### 🎵 Music Album
 **Campaign:** Record album (2,000 XLM goal)  
-
 **Perk:** Exclusive track token at 500 XLM pledge
 
-## 🛠️ Technology Stackgit clone https://github.com/Pswaikar1742/StellarPledge.git## 🎯 Why StellarPledge?1. 500 XLM → Campaign escrow
-
 ### 🎮 Game Development
-
-
-
 **Campaign:** Build indie game (10,000 XLM goal)  
+**Perk:** In-game currency at 2,000 XLM pledge
 
-**Perk:** In-game currency at 2,000 XLM pledge### Frontendcd StellarPledge
-
-
-
-### 📚 Book Publishing- **Framework:** React 19.2.0
-
-
-
-**Campaign:** Publish novel (1,000 XLM goal)  - **Styling:** Tailwind CSS + Framer Motion2. 1 FILMCREDIT → Charlie's wallet (automatic!)
-
+### 📚 Book Publishing
+**Campaign:** Publish novel (1,000 XLM goal)  
 **Perk:** Signed digital copy at 200 XLM pledge
-
-- **Blockchain:** Stellar SDK 11.3.0
-
----
-
-- **Wallet:** Standalone (AES encryption)# Install frontend dependencies
 
 ## 💡 Key Innovations
 
-- **UI Components:** Radix UI + Lucide Icons
-
 ### 1. Automated On-Chain Perks ⭐
-
-cd frontendTraditional crowdfunding platforms have significant limitations:
+First crowdfunding platform with **instant, automatic** reward distribution via cross-contract calls.
 
 First crowdfunding platform with **instant, automatic** reward distribution via cross-contract calls.
 
@@ -654,56 +447,31 @@ Smart contract validates pledge amounts and triggers rewards automatically.
 
 Support for any token: NFTs, access tokens, collectibles, memberships.
 
-### Security
-
----
-
-- AES-256-GCM encryption for private keysnpm start- ❌ Centralized control of funds
+### 2. Standalone Wallet System
+No browser extensions needed - complete wallet management built into the app with robust security:
+- AES-256-GCM encryption for private keys
+- Password-protected keystores
+- Client-side session management
+- Input validation and sanitization
 
 ## 📊 Project Status
 
-- Password-protected keystores
+✅ Smart Contract: 100% Complete (Deployed on testnet)  
+✅ Standalone Wallet: 100% Complete (3 connection modes)  
+✅ Frontend UI: 100% Complete (8 pages, 16+ components)  
+✅ Documentation: 100% Complete (420+ pages)  
+✅ Demo Accounts: 100% Complete (3 funded accounts)  
+✅ System Testing: 100% Complete (Manual testing)  
 
-```
+**Status:** 🟢 **PRODUCTION READY** for demonstration
 
-✅ Smart Contract:     100% Complete (Deployed on testnet)- Client-side session management```
+## 🔗 Quick Links
 
-✅ Standalone Wallet:  100% Complete (3 connection modes)
-
-✅ Frontend UI:        100% Complete (8 pages, 16+ components)- Input validation and sanitization
-
-✅ Documentation:      100% Complete (420+ pages)
-
-✅ Demo Accounts:      100% Complete (3 funded accounts)- ❌ Slow payouts (weeks/months)## 🏆 Key Features
-
-✅ System Testing:     100% Complete (Manual testing)
-
-```---
-
-
-
-**Status:** 🟢 **PRODUCTION READY** for demonstrationThe app will open at `http://localhost:3000`
-
-
-
----## 🔗 Smart Contract
-
-
-
-## 🔗 Quick Links- ❌ Manual reward distribution
-
-
-
-- **Repository:** [github.com/Pswaikar1742/StellarPledge](https://github.com/Pswaikar1742/StellarPledge)**Deployed on Stellar Testnet:**
-
+- **Repository:** [github.com/Pswaikar1742/StellarPledge](https://github.com/Pswaikar1742/StellarPledge)
 - **Smart Contract:** [View on Stellar Expert](https://stellar.expert/explorer/testnet/contract/CCPL64I5DIKB6B57QM5CCUYBQ5RKCH3N4LF4XTQLQAD6JJNJ5JDJEKYP)
-
-- **Demo Accounts:**- **Contract ID:** `CCL2RYVGR4RWLB6Q6JSMRGKIUUYLDKSJGUDCGNPMXGVDMHFLLHMTNVUH`### First Time Setup
-
+- **Demo Accounts:**
   - [Alice (Creator)](https://stellar.expert/explorer/testnet/account/GA4NSVMAWCZYTM26UZIAKXR5A7VYWJJSQDJYXFVMQ2PN2MGCDOP5P5TM)
-
-  - [Bob (Backer)](https://stellar.expert/explorer/testnet/account/GBQH2XFDW4DWK6QDNHD7DKABCJV3BLRTEDMWUMSRPFNECR6GVGPPNDE)- **Explorer:** [View on Stellar Expert](https://stellar.expert/explorer/testnet/contract/CCL2RYVGR4RWLB6Q6JSMRGKIUUYLDKSJGUDCGNPMXGVDMHFLLHMTNVUH)
-
+  - [Bob (Backer)](https://stellar.expert/explorer/testnet/account/GBQH2XFDW4DWK6QDNHD7DKABCJV3BLRTEDMWUMSRPFNECR6GVGPPNDE)
   - [Charlie (Backer)](https://stellar.expert/explorer/testnet/account/GDBJQHQXXQXJ2AU55VFGWSQRLHPOKQTDVIPZAEVQ6T3V2UEXWZXH33Y)
 
 - ❌ Limited transparency### Decentralized Escrow
@@ -730,55 +498,25 @@ claim_funds()      // Creator claims funds after success
 
 ## 📄 License
 
-withdraw_refund()  // Backer gets refund if campaign fails```javascript
+### 3. Threshold-Based Incentives
+Smart contract validates pledge amounts and triggers rewards automatically.
+
+### 4. Any Stellar Asset as Reward
+Support for any token: NFTs, access tokens, collectibles, memberships.
+
+## 👥 Team
+
+**Team of 3** passionate blockchain developers building the future of creator economy on Stellar!
+
+## 📄 License
 
 MIT License - See [LICENSE](LICENSE) file for details
 
-get_campaign()     // Retrieve campaign details
-
 ---
-
-```window.setupDemoUsers()**StellarPledge solves these problems:**
 
 **🌟 StellarPledge: Where Creators Meet Their Community On-Chain 🌟**
 
-
-
 *Last Updated: October 26, 2025 | Version: 1.0.0 | Status: Demo Ready*
-
-### Automated Perk Logic```
-
-```rust
-
-if let Some(perk) = &campaign.perk {- ✅ Zero platform fees### Instantaneous Settlements
-
-    if total_backer_pledge >= perk.threshold {
-
-        // Cross-contract call to Stellar Asset Contract3. **Login with demo accounts**:
-
-        let perk_token_client = token::Client::new(&env, &perk.asset_address);
-
-        perk_token_client.transfer(&campaign.creator, &backer, &perk.amount);   - Creator: `alice@example.com` / `alice123`- ✅ Decentralized smart contract escrowPayouts and refunds are processed in ~5 seconds via Stellar's fast consensus.
-
-        log!("✅ Perk transferred automatically!");
-
-    }   - Funder: `bob@example.com` / `bob123`
-
-}
-
-```   - Funder: `charlie@example.com` / `charlie123`- ✅ Instant settlements (~5 seconds)
-
-
-
----
-
-
-
-## 🎬 Live Demo---- ✅ Automated reward distribution### Micro-Pledge Capable
-
-
-
-### Quick Demo (2 minutes)
 
 1. Alice creates campaign: Goal 6,000 XLM, reward at 3,000 XLM
 
