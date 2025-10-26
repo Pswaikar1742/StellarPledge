@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Plus, TrendingUp, Clock, CheckCircle, Wallet as WalletIcon, Sparkles } from 'lucide-react';
+import { Plus, TrendingUp, Clock, CheckCircle, Wallet as WalletIcon } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { useWallet } from '../context/WalletContext';
 import { useCampaign } from '../context/CampaignContext';
@@ -9,7 +9,7 @@ import { useCampaign } from '../context/CampaignContext';
 const CreatorDashboard = () => {
   const navigate = useNavigate();
   const { isConnected, publicKey } = useWallet();
-  const { campaigns, loadAllCampaigns, getUserCreatedCampaigns, isLoading } = useCampaign();
+  const { loadAllCampaigns, getUserCreatedCampaigns, isLoading } = useCampaign();
   const [currentUser, setCurrentUser] = useState(null);
   const [userCampaigns, setUserCampaigns] = useState([]);
 
