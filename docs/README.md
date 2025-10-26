@@ -1,5 +1,23 @@
 # 📚 StellarPledge Documentation Index
 
+> **⚠️ NOTE: This folder contains legacy documentation from earlier development.**  
+> **📁 Current organized documentation is in:** [`/documentation/`](../documentation/)  
+> **📖 For latest guides, see:** [Documentation README](../documentation/README.md)
+
+---
+
+## 🆕 Current Documentation
+
+**For the latest, organized documentation:**
+- **[Main README](../README.md)** - Project overview
+- **[Documentation Index](../documentation/README.md)** - All current docs
+- **[Live Demo Script](../documentation/demo/LIVE_DEMO_SCRIPT.md)** ⭐ - Presentation guide
+- **[Complete Demo Guide](../documentation/demo/COMPLETE_DEMO_GUIDE.md)** - Full walkthrough
+
+---
+
+## 📁 Legacy Documents Below
+
 Welcome to the complete documentation for StellarPledge - The Automated Creator Economy Protocol.
 
 ---

@@ -1,10 +1,23 @@
 import React from 'react';
-import './App.css';
-import { WalletProvider, useWallet } from './context/WalletContext';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import { WalletProvider } from './context/WalletContext';
 import { CampaignProvider } from './context/CampaignContext';
-import WalletConnect from './components/Wallet/WalletConnect';
-import WalletDashboard from './components/Wallet/WalletDashboard';
+import { ThemeProvider } from './components/ThemeProvider';
+import { Toaster } from './components/ui/toaster';
+import Header from './components/Header';
+import CampaignGallery from './pages/CampaignGallery';
+import CampaignDetail from './pages/CampaignDetail';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import RoleSelection from './pages/RoleSelection';
+import CreatorDashboard from './pages/CreatorDashboard';
+import FunderDashboard from './pages/FunderDashboard';
+import CreateCampaign from './pages/CreateCampaign';
 import UnlockWallet from './components/Wallet/UnlockWallet';
+import { useWallet } from './context/WalletContext';
+import './utils/setupDemoUsers'; // Make setupDemoUsers available globally
+import './utils/mockWalletBalance'; // Make wallet balance utilities available globally
+import './utils/realDemoAccounts'; // Make REAL funded demo accounts available globally
 
 /**
  * Error Boundary Component
@@ -26,27 +39,17 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          color: 'white',
-          minHeight: '100vh',
-          padding: '2rem',
-          textAlign: 'center'
-        }}>
-          <h1>⚠️ Something went wrong</h1>
-          <p>Error: {this.state.error?.message}</p>
-          <button onClick={() => window.location.reload()} style={{
-            padding: '1rem 2rem',
-            fontSize: '1.2rem',
-            background: '#fff',
-            color: '#667eea',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            marginTop: '2rem'
-          }}>
-            Reload Page
-          </button>
+        <div className="min-h-screen bg-destructive text-destructive-foreground flex items-center justify-center p-8">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold mb-4">⚠️ Something went wrong</h1>
+            <p className="text-xl mb-8">Error: {this.state.error?.message}</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="px-8 py-4 bg-background text-foreground rounded-lg font-bold hover:opacity-90 transition-opacity"
+            >
+              Reload Page
+            </button>
+          </div>
         </div>
       );
     }
@@ -56,122 +59,54 @@ class ErrorBoundary extends React.Component {
 }
 
 /**
- * Main App Component with Standalone Wallet Integration
+ * Main App Content with Wallet State Management
  */
 function AppContent() {
   const { isConnected, isLocked } = useWallet();
-  
-  console.log("AppContent render - isConnected:", isConnected, "isLocked:", isLocked);
 
+  // Show unlock screen if wallet is locked
+  if (isConnected && isLocked) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <UnlockWallet />
+      </div>
+    );
+  }
+
+  // Show main app with header and content
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>🌟 StellarPledge</h1>
-        <p>Automated Creator Economy on Stellar</p>
-        <p className="subtitle">
-          Standalone Wallet - No Freighter Required!
-        </p>
-      </header>
-
-      <main className="App-main">
-        {/* Show wallet connection if not connected */}
-        {!isConnected && (
-          <div className="wallet-section">
-            <WalletConnect />
-          </div>
-        )}
-
-        {/* Show unlock screen if connected but locked */}
-        {isConnected && isLocked && (
-          <div className="wallet-section">
-            <UnlockWallet />
-          </div>
-        )}
-
-        {/* Show dashboard and app content when connected and unlocked */}
-        {isConnected && !isLocked && (
-          <div className="connected-content">
-            <div className="wallet-dashboard-section">
-              <WalletDashboard />
-            </div>
-
-            <section className="status-section">
-              <h2>✅ System Status: Ready for Testing</h2>
-              <ul className="status-list">
-                <li>✅ Smart Contract Deployed with Perk System</li>
-                <li>✅ Standalone Wallet Integration Complete</li>
-                <li>✅ Soroban.js Contract Layer Ready</li>
-                <li>✅ React Context Providers Active</li>
-                <li>✅ Create/Import/Read-Only Modes Working</li>
-                <li>⏳ Campaign UI Components Coming Next</li>
-              </ul>
-            </section>
-
-            <section className="test-info">
-              <h2>🧪 Testing Instructions</h2>
-              <div className="test-steps">
-                <h3>Test 1: Create New Wallet</h3>
-                <ol>
-                  <li>Click "Create New Wallet"</li>
-                  <li>Enter wallet name and password (min 8 chars)</li>
-                  <li>Save your secret key from backup screen!</li>
-                  <li>Wallet ready to use</li>
-                </ol>
-
-                <h3>Test 2: Import Demo Account (Alice)</h3>
-                <ol>
-                  <li>Get secret key from: demo-accounts/Alice.txt</li>
-                  <li>Click "Import Existing Wallet"</li>
-                  <li>Paste Alice's secret key</li>
-                  <li>Set password and import</li>
-                  <li>Should show ~9,999 XLM balance</li>
-                </ol>
-
-                <h3>Test 3: Read-Only Connection (Charlie)</h3>
-                <ol>
-                  <li>Charlie's public key: GC4GCLLQEERQXIHNYITVQINGT54UK3ZPHR5ACC6QKS2TKVS4YL3X7YVP</li>
-                  <li>Click "Connect Read-Only"</li>
-                  <li>Paste public key</li>
-                  <li>Can view but not sign transactions</li>
-                </ol>
-
-                <h3>Test 4: Lock/Unlock</h3>
-                <ol>
-                  <li>Click "Lock" button in dashboard</li>
-                  <li>Wallet locks (keypair cleared from memory)</li>
-                  <li>Enter password to unlock</li>
-                  <li>Ready to sign again</li>
-                </ol>
-              </div>
-            </section>
-
-            <section className="contract-info">
-              <h2>📝 Contract Details</h2>
-              <p><strong>Address:</strong> CD4L4MPVSJ3RLAUYQ3ID2M75VWVVMDFBTESJIY4UULFFN33X2KNRTJXY</p>
-              <p><strong>Network:</strong> Stellar Testnet</p>
-              <p><strong>Features:</strong></p>
-              <ul>
-                <li>Automated Perk Distribution via Cross-Contract Calls</li>
-                <li>Configurable Threshold-Based Rewards</li>
-                <li>Support for Any Stellar Classic Asset</li>
-                <li>Secure Escrow with Success/Fail States</li>
-              </ul>
-            </section>
-          </div>
-        )}
-      </main>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <Routes>
+        <Route path="/" element={<CampaignGallery />} />
+        <Route path="/campaign/:id" element={<CampaignDetail />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/role-selection" element={<RoleSelection />} />
+        <Route path="/creator-dashboard" element={<CreatorDashboard />} />
+        <Route path="/funder-dashboard" element={<FunderDashboard />} />
+        <Route path="/create-campaign" element={<CreateCampaign />} />
+      </Routes>
+      <Toaster />
     </div>
   );
 }
 
+/**
+ * Root App Component with Providers
+ */
 function App() {
   return (
     <ErrorBoundary>
-      <WalletProvider>
-        <CampaignProvider>
-          <AppContent />
-        </CampaignProvider>
-      </WalletProvider>
+      <BrowserRouter>
+        <ThemeProvider defaultTheme="light" storageKey="stellarpledge-theme">
+          <WalletProvider>
+            <CampaignProvider>
+              <AppContent />
+            </CampaignProvider>
+          </WalletProvider>
+        </ThemeProvider>
+      </BrowserRouter>
     </ErrorBoundary>
   );
 }

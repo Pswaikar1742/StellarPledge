@@ -6,6 +6,7 @@
 
 import React, { createContext, useState, useContext, useEffect } from "react";
 import WalletService from "../services/WalletService";
+import { getBalance, initializeBalance } from "../utils/mockWalletBalance";
 
 const WalletContext = createContext();
 
@@ -43,12 +44,27 @@ export const WalletProvider = ({ children }) => {
       
       console.log("🔄 Wallet detected:", storedWallet);
       
-      // Auto-load balance for read-only wallets
-      if (storedWallet.walletType === "readonly") {
-        loadBalance(storedWallet.publicKey);
-      }
+      // Initialize mock balance if not set
+      initializeBalance(storedWallet.publicKey, 10000);
+      
+      // Load balance
+      loadBalance(storedWallet.publicKey);
     }
-  }, []);
+    
+    // Listen for balance updates
+    const handleBalanceUpdate = (event) => {
+      if (event.detail && event.detail.publicKey === publicKey) {
+        setBalance(event.detail.balance);
+      }
+    };
+    
+    window.addEventListener('balance-update', handleBalanceUpdate);
+    
+    return () => {
+      window.removeEventListener('balance-update', handleBalanceUpdate);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [publicKey]);
 
   /**
    * Create a new wallet
@@ -72,8 +88,11 @@ export const WalletProvider = ({ children }) => {
 
       console.log("✅ Wallet created:", result.publicKey);
       
+      // Initialize mock balance
+      initializeBalance(result.publicKey, 10000);
+      
       // Load balance
-      await loadBalance();
+      await loadBalance(result.publicKey);
 
       return result; // Return secret key & mnemonic for backup
     } catch (err) {
@@ -108,8 +127,11 @@ export const WalletProvider = ({ children }) => {
 
       console.log("✅ Wallet imported:", result.publicKey);
       
+      // Initialize mock balance
+      initializeBalance(result.publicKey, 10000);
+      
       // Load balance
-      await loadBalance();
+      await loadBalance(result.publicKey);
 
       return result;
     } catch (err) {
@@ -143,8 +165,11 @@ export const WalletProvider = ({ children }) => {
 
       console.log("✅ Connected read-only:", result.publicKey);
       
+      // Initialize mock balance
+      initializeBalance(result.publicKey, 10000);
+      
       // Load balance
-      await loadBalance();
+      await loadBalance(result.publicKey);
 
       return result;
     } catch (err) {
@@ -210,12 +235,43 @@ export const WalletProvider = ({ children }) => {
 
   /**
    * Load account balance
+   * Supports both real Horizon queries and mock balances
    */
   const loadBalance = async (pubKey = null) => {
     try {
-      const balanceData = await WalletService.getBalance(pubKey);
-      setBalance(balanceData);
-      return balanceData;
+      const key = pubKey || publicKey;
+      if (!key) return null;
+      
+      // Check if we should use real balances
+      const useRealBalances = localStorage.getItem('stellarpledge_use_real_balances') === 'true';
+      
+      if (useRealBalances) {
+        try {
+          // Try to fetch real balance from Horizon
+          console.log(`🌐 Fetching REAL balance from Horizon for ${key}...`);
+          const account = await WalletService.getWalletInfo();
+          
+          if (account && account.balances) {
+            const nativeBalance = account.balances.find(b => b.asset_type === 'native');
+            if (nativeBalance) {
+              const realBalance = parseFloat(nativeBalance.balance);
+              setBalance(realBalance);
+              console.log(`💰 Real balance loaded: ${realBalance} XLM`);
+              return realBalance;
+            }
+          }
+        } catch (horizonError) {
+          console.warn('⚠️ Could not fetch real balance, falling back to mock:', horizonError.message);
+        }
+      }
+      
+      // Use mock balance (default behavior)
+      const mockBalance = getBalance(key);
+      setBalance(mockBalance);
+      
+      console.log(`💰 Mock balance loaded for ${key}: ${mockBalance} XLM`);
+      
+      return mockBalance;
     } catch (err) {
       console.error("Load balance failed:", err);
       // Don't throw, balance loading is not critical
