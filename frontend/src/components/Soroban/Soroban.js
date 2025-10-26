@@ -42,11 +42,11 @@ export const numberToI128 = (value) => nativeToScVal(value, { type: "i128" });
 // Create Option<Address> ScVal
 export const optionAddressToScVal = (address) => {
   if (address) {
-    // Some variant with Address
-    return xdr.ScVal.scvOption(new Address(address).toScVal());
+    // Some variant - wrap Address in a Vec with 1 element
+    return xdr.ScVal.scvVec([new Address(address).toScVal()]);
   } else {
-    // None variant
-    return xdr.ScVal.scvOption(undefined);
+    // None variant - empty Vec
+    return xdr.ScVal.scvVec([]);
   }
 };
 
