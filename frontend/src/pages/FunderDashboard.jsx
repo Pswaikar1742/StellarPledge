@@ -6,17 +6,20 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import CampaignCard from '../components/CampaignCard';
 import { useWallet } from '../context/WalletContext';
+import { useCampaign } from '../context/CampaignContext';
 
 const FunderDashboard = () => {
   const navigate = useNavigate();
-  const { isConnected } = useWallet();
+  const { isConnected, publicKey } = useWallet();
+  const { loadAllCampaigns, campaigns, getUserBackedCampaigns, isLoading } = useCampaign();
   const [currentUser, setCurrentUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [myPledges, setMyPledges] = useState([]);
+  const [displayCampaigns, setDisplayCampaigns] = useState([]);
+  const [backedCampaigns, setBackedCampaigns] = useState([]);
 
   useEffect(() => {
-    // Check if user is logged in
-    const loadUserData = () => {
+    const loadUserData = async () => {
       const user = JSON.parse(localStorage.getItem('stellarpledge_current_user'));
       if (!user) {
         navigate('/login');
@@ -31,43 +34,71 @@ const FunderDashboard = () => {
       
       setCurrentUser(user);
 
-      // Load user's pledges from localStorage
-      const allCampaigns = JSON.parse(localStorage.getItem('stellarpledge_campaigns') || '[]');
-      const userPledges = [];
-      
-      allCampaigns.forEach(campaign => {
-        campaign.pledges?.forEach(pledge => {
-          if (pledge.funderId === user.id) {
-            userPledges.push({
-              id: pledge.id,
-              campaignId: campaign.id,
-              campaignTitle: campaign.title,
-              amount: pledge.amount,
-              hasReward: pledge.amount >= campaign.rewardTier.minAmount,
-              tokenCode: campaign.rewardTier.tokenCode
-            });
-          }
-        });
-      });
-      
-      setMyPledges(userPledges);
+      // Load campaigns from blockchain
+      if (publicKey) {
+        await loadAllCampaigns();
+      }
     };
 
     loadUserData();
+  }, [navigate, publicKey, loadAllCampaigns]);
 
-    // Listen for user updates and pledge updates
-    window.addEventListener('user-login', loadUserData);
-    window.addEventListener('pledge-update', loadUserData);
-    
-    return () => {
-      window.removeEventListener('user-login', loadUserData);
-      window.removeEventListener('pledge-update', loadUserData);
-    };
-  }, [navigate]);
+  useEffect(() => {
+    // Get user's backed campaigns from blockchain
+    if (campaigns && campaigns.length > 0 && publicKey) {
+      const backed = getUserBackedCampaigns();
+      
+      // Transform for display
+      const transformedBacked = backed.map(campaign => {
+        const uiData = JSON.parse(localStorage.getItem(`campaign_ui_${campaign.id}`) || '{}');
+        const now = Math.floor(Date.now() / 1000);
+        const daysLeft = Math.floor((campaign.deadline - now) / 86400);
+        const backers = Object.keys(campaign.backers || {}).length;
+        
+        // Get pledge amount for this user
+        const userPledgeAmount = campaign.backers[publicKey] 
+          ? Number(campaign.backers[publicKey]) / 10000000 
+          : 0;
+        
+        const hasReward = campaign.perk && userPledgeAmount >= (Number(campaign.perk.threshold) / 10000000);
+        
+        return {
+          id: campaign.id,
+          campaignId: campaign.id,
+          campaignTitle: uiData.title || `Campaign ${campaign.id}`,
+          amount: userPledgeAmount,
+          hasReward,
+          tokenCode: uiData.perkTokenCode || 'REWARD'
+        };
+      });
+      
+      setBackedCampaigns(backed);
+      setMyPledges(transformedBacked);
 
-  // Load all active campaigns from localStorage
-  const allCampaigns = JSON.parse(localStorage.getItem('stellarpledge_campaigns') || '[]')
-    .filter(c => c.status === 'active');
+      // Transform all campaigns for display
+      const transformed = campaigns
+        .filter(c => c.status === 0) // Only active campaigns (status 0)
+        .map(campaign => {
+          const uiData = JSON.parse(localStorage.getItem(`campaign_ui_${campaign.id}`) || '{}');
+          const now = Math.floor(Date.now() / 1000);
+          const daysLeft = Math.floor((campaign.deadline - now) / 86400);
+          const backers = Object.keys(campaign.backers || {}).length;
+          
+          return {
+            id: campaign.id,
+            title: uiData.title || `Campaign ${campaign.id}`,
+            description: uiData.description || 'No description available',
+            pledged: Number(campaign.pledged) / 10000000,
+            goal: Number(campaign.goal) / 10000000,
+            backers,
+            daysLeft: Math.max(0, daysLeft),
+            status: 'active'
+          };
+        });
+      
+      setDisplayCampaigns(transformed);
+    }
+  }, [campaigns, publicKey, getUserBackedCampaigns]);
 
   const handleConnectWallet = () => {
     // Trigger wallet connection modal from header
@@ -77,7 +108,7 @@ const FunderDashboard = () => {
     }
   };
 
-  const filteredCampaigns = allCampaigns.filter(campaign =>
+  const filteredCampaigns = displayCampaigns.filter(campaign =>
     campaign.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     campaign.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -205,7 +236,14 @@ const FunderDashboard = () => {
             Active Campaigns ({filteredCampaigns.length})
           </h2>
           
-          {filteredCampaigns.length > 0 ? (
+          {isLoading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto mb-4"></div>
+                <p className="text-muted-foreground">Loading campaigns from blockchain...</p>
+              </div>
+            </div>
+          ) : filteredCampaigns.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredCampaigns.map((campaign, index) => (
                 <CampaignCard key={campaign.id} campaign={campaign} index={index} />
@@ -218,7 +256,7 @@ const FunderDashboard = () => {
                 No Campaigns Found
               </h3>
               <p className="text-muted-foreground">
-                Try adjusting your search query
+                {searchQuery ? 'Try adjusting your search query' : 'No active campaigns available yet'}
               </p>
             </div>
           )}

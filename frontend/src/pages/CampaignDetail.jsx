@@ -6,35 +6,71 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { useWallet } from '../context/WalletContext';
+import { useCampaign } from '../context/CampaignContext';
 import { useToast } from '../components/ui/use-toast';
-import { deductBalance } from '../utils/mockWalletBalance';
 
 const CampaignDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isConnected, balance, publicKey } = useWallet();
+  const { loadCampaign, handlePledge, isLoading: contractLoading } = useCampaign();
   const { toast } = useToast();
   const [campaign, setCampaign] = useState(null);
   const [pledgeAmount, setPledgeAmount] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    // Load user
-    const user = JSON.parse(localStorage.getItem('stellarpledge_current_user'));
-    setCurrentUser(user);
+    const loadData = async () => {
+      // Load user
+      const user = JSON.parse(localStorage.getItem('stellarpledge_current_user'));
+      setCurrentUser(user);
 
-    // Load campaign from localStorage
-    const campaigns = JSON.parse(localStorage.getItem('stellarpledge_campaigns') || '[]');
-    const foundCampaign = campaigns.find(c => c.id === parseInt(id));
-    
-    if (foundCampaign) {
-      setCampaign(foundCampaign);
-    } else {
-      navigate('/');
-    }
-  }, [id, navigate]);
+      // Load campaign from blockchain
+      if (publicKey) {
+        const campaignData = await loadCampaign(parseInt(id));
+        
+        if (campaignData) {
+          // Enhance with UI metadata from localStorage
+          const uiData = JSON.parse(localStorage.getItem(`campaign_ui_${id}`) || '{}');
+          
+          // Calculate days left
+          const now = Math.floor(Date.now() / 1000);
+          const daysLeft = Math.floor((campaignData.deadline - now) / 86400);
+          
+          // Count backers
+          const backers = Object.keys(campaignData.backers || {}).length;
+          
+          setCampaign({
+            ...campaignData,
+            title: uiData.title || `Campaign ${id}`,
+            description: uiData.description || 'No description available',
+            creatorName: uiData.creatorName || 'Anonymous Creator',
+            daysLeft,
+            backers,
+            pledged: Number(campaignData.pledged) / 10000000, // Convert stroops
+            goal: Number(campaignData.goal) / 10000000,
+            rewardTier: {
+              minAmount: campaignData.perk ? Number(campaignData.perk.threshold) / 10000000 : 0,
+              tokenCode: uiData.perkTokenCode || 'REWARD',
+              tokenName: uiData.perkTokenName || 'Reward Token'
+            }
+          });
+        } else {
+          toast({
+            title: "Campaign Not Found",
+            description: "This campaign does not exist on the blockchain",
+            variant: "destructive"
+          });
+          navigate('/');
+        }
+      }
+    };
 
-  const handlePledge = () => {
+    loadData();
+  }, [id, navigate, publicKey, loadCampaign, toast]);
+
+  const handlePledgeSubmit = async () => {
     if (!isConnected) {
       toast({
         title: "Wallet Not Connected",
@@ -65,7 +101,7 @@ const CampaignDetail = () => {
       return;
     }
 
-    // Check balance using mock wallet balance
+    // Check balance
     const currentBalance = parseFloat(balance) || 0;
     if (amount > currentBalance) {
       toast({
@@ -76,67 +112,71 @@ const CampaignDetail = () => {
       return;
     }
 
+    setIsSubmitting(true);
+
     try {
-      // Deduct balance from wallet
-      deductBalance(publicKey, amount);
+      // Call blockchain pledge function
+      const amountInStroops = Math.floor(amount * 10000000); // Convert XLM to stroops
+      await handlePledge(parseInt(id), amountInStroops);
 
-      // Update campaign with new pledge
-      const campaigns = JSON.parse(localStorage.getItem('stellarpledge_campaigns') || '[]');
-      const campaignIndex = campaigns.findIndex(c => c.id === campaign.id);
-      
-      if (campaignIndex !== -1) {
-        // Add pledge
-        const newPledge = {
-          id: Date.now(),
-          funderId: currentUser.id,
-          funderName: currentUser.name,
-          funderPublicKey: publicKey,
-          amount: amount,
-          timestamp: new Date().toISOString(),
-          earnedReward: amount >= campaign.rewardTier.minAmount
-        };
-
-        campaigns[campaignIndex].pledges = campaigns[campaignIndex].pledges || [];
-        campaigns[campaignIndex].pledges.push(newPledge);
-        campaigns[campaignIndex].pledged += amount;
-        campaigns[campaignIndex].backers = campaigns[campaignIndex].pledges.length;
-
-        // Check if goal is met
-        if (campaigns[campaignIndex].pledged >= campaigns[campaignIndex].goal) {
-          campaigns[campaignIndex].status = 'pending_approval';
-        }
-
-        localStorage.setItem('stellarpledge_campaigns', JSON.stringify(campaigns));
+      // Reload campaign data
+      const updatedCampaign = await loadCampaign(parseInt(id));
+      if (updatedCampaign) {
+        const uiData = JSON.parse(localStorage.getItem(`campaign_ui_${id}`) || '{}');
+        const now = Math.floor(Date.now() / 1000);
+        const daysLeft = Math.floor((updatedCampaign.deadline - now) / 86400);
+        const backers = Object.keys(updatedCampaign.backers || {}).length;
         
-        // Dispatch event to update dashboards
-        window.dispatchEvent(new Event('pledge-update'));
-        
-        // Update local state
-        setCampaign(campaigns[campaignIndex]);
-        setPledgeAmount('');
-
-        // Show success message
-        const earnedReward = amount >= campaign.rewardTier.minAmount;
-        toast({
-          title: "Pledge Successful! 🎉",
-          description: earnedReward 
-            ? `You pledged ${amount} XLM and earned 1 ${campaign.rewardTier.tokenCode} token!`
-            : `You pledged ${amount} XLM. Thank you for your support!`
+        setCampaign({
+          ...updatedCampaign,
+          title: uiData.title || `Campaign ${id}`,
+          description: uiData.description || 'No description available',
+          creatorName: uiData.creatorName || 'Anonymous Creator',
+          daysLeft,
+          backers,
+          pledged: Number(updatedCampaign.pledged) / 10000000,
+          goal: Number(updatedCampaign.goal) / 10000000,
+          rewardTier: {
+            minAmount: updatedCampaign.perk ? Number(updatedCampaign.perk.threshold) / 10000000 : 0,
+            tokenCode: uiData.perkTokenCode || 'REWARD',
+            tokenName: uiData.perkTokenName || 'Reward Token'
+          }
         });
       }
+
+      setPledgeAmount('');
+
+      // Show success message
+      const earnedReward = amount >= campaign.rewardTier.minAmount;
+      toast({
+        title: "Pledge Successful! 🎉",
+        description: earnedReward 
+          ? `You pledged ${amount} XLM and earned 1 ${campaign.rewardTier.tokenCode} token!`
+          : `You pledged ${amount} XLM. Thank you for your support!`
+      });
+
+      // Dispatch event to update dashboards
+      window.dispatchEvent(new Event('pledge-update'));
+
     } catch (error) {
+      console.error("Pledge error:", error);
       toast({
         title: "Pledge Failed",
-        description: error.message,
+        description: error.message || "Failed to submit pledge to blockchain",
         variant: "destructive"
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   if (!campaign) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading campaign from blockchain...</p>
+        </div>
       </div>
     );
   }
@@ -290,11 +330,11 @@ const CampaignDetail = () => {
                 )}
 
                 <Button
-                  onClick={handlePledge}
-                  disabled={!isConnected || !pledgeAmount}
+                  onClick={handlePledgeSubmit}
+                  disabled={!isConnected || !pledgeAmount || isSubmitting || contractLoading}
                   className="w-full bg-accent text-accent-foreground hover:bg-accent/90 font-bold"
                 >
-                  {!isConnected ? 'Connect Wallet First' : 'Pledge Now'}
+                  {isSubmitting || contractLoading ? 'Processing...' : !isConnected ? 'Connect Wallet First' : 'Pledge Now'}
                 </Button>
 
                 {!isConnected && (

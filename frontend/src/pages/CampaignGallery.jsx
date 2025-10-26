@@ -1,39 +1,54 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Zap, ShieldCheck, Globe, GitCommit, Award, HeartHandshake } from 'lucide-react';
 import CampaignCard from '../components/CampaignCard';
 import Footer from '../components/Footer';
+import { useCampaign } from '../context/CampaignContext';
+import { useWallet } from '../context/WalletContext';
 
 const CampaignGallery = () => {
-  const mockCampaigns = [
-    {
-      id: 1,
-      title: "Revolutionary DeFi Protocol",
-      description: "Building the next generation of decentralized finance infrastructure on Stellar blockchain.",
-      pledged: 5000,
-      goal: 10000,
-      backers: 42,
-      daysLeft: 15
-    },
-    {
-      id: 2,
-      title: "Green Energy NFT Marketplace",
-      description: "Tokenizing renewable energy credits to accelerate the transition to sustainable power.",
-      pledged: 8500,
-      goal: 15000,
-      backers: 67,
-      daysLeft: 8
-    },
-    {
-      id: 3,
-      title: "Decentralized Education Platform",
-      description: "Empowering learners worldwide with blockchain-verified credentials and peer-to-peer learning.",
-      pledged: 3200,
-      goal: 8000,
-      backers: 28,
-      daysLeft: 22
+  const { loadAllCampaigns, campaigns, isLoading } = useCampaign();
+  const { publicKey } = useWallet();
+  const [displayCampaigns, setDisplayCampaigns] = useState([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (publicKey) {
+        await loadAllCampaigns();
+      }
+    };
+
+    loadData();
+  }, [publicKey, loadAllCampaigns]);
+
+  useEffect(() => {
+    // Transform blockchain campaigns for display
+    if (campaigns && campaigns.length > 0) {
+      const transformed = campaigns.map(campaign => {
+        // Get UI metadata from localStorage
+        const uiData = JSON.parse(localStorage.getItem(`campaign_ui_${campaign.id}`) || '{}');
+        
+        // Calculate days left
+        const now = Math.floor(Date.now() / 1000);
+        const daysLeft = Math.floor((campaign.deadline - now) / 86400);
+        
+        // Count backers
+        const backers = Object.keys(campaign.backers || {}).length;
+        
+        return {
+          id: campaign.id,
+          title: uiData.title || `Campaign ${campaign.id}`,
+          description: uiData.description || 'No description available',
+          pledged: Number(campaign.pledged) / 10000000, // Convert stroops to XLM
+          goal: Number(campaign.goal) / 10000000,
+          backers,
+          daysLeft: Math.max(0, daysLeft)
+        };
+      });
+      
+      setDisplayCampaigns(transformed);
     }
-  ];
+  }, [campaigns]);
 
   const featureVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -198,15 +213,35 @@ const CampaignGallery = () => {
                 Discover groundbreaking projects you can support today.
               </p>
             </div>
-            <div id="campaign-list" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {mockCampaigns.map((campaign, index) => (
-                <CampaignCard 
-                  key={campaign.id} 
-                  campaign={campaign} 
-                  index={index}
-                />
-              ))}
-            </div>
+            
+            {isLoading ? (
+              <div className="flex justify-center items-center py-20">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto mb-4"></div>
+                  <p className="text-muted-foreground">Loading campaigns from blockchain...</p>
+                </div>
+              </div>
+            ) : displayCampaigns.length > 0 ? (
+              <div id="campaign-list" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {displayCampaigns.map((campaign, index) => (
+                  <CampaignCard 
+                    key={campaign.id} 
+                    campaign={campaign} 
+                    index={index}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="bg-card rounded-2xl p-12 border border-border text-center">
+                <div className="text-6xl mb-4">🚀</div>
+                <h3 className="text-2xl font-bold text-foreground mb-2">
+                  No Active Campaigns Yet
+                </h3>
+                <p className="text-muted-foreground">
+                  Be the first to create a campaign and launch your vision!
+                </p>
+              </div>
+            )}
           </div>
         </section>
       </main>
