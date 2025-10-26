@@ -1,21 +1,17 @@
-# Bob - The Student Backer
+# Bob - The Small Backer (Student)
 
 ## Account Details
-Public Key: GAY4ASCS7CPNVH4OVSRO75V7NDRP4DDAF22V5SR3DLPP2WKI2Y3FRVNA
-Secret Key: SBJLYDJEBTRRQ3FPBOGQFLL6ZILZMZJGFVC7BIHTKJQJ4MAKT6ZNRX7C
-Recovery Phrase: rebuild conduct welcome photo extend cement region luxury afford ready tackle object waste rather clarify slam inhale giggle despair pole future recipe pluck note
-
-## Balance
-10,000 XLM (funded for demo)
+Public Key: GD4I6Y3FQW3PTNQAVP223YOFLHE66GTORJRGD55FWPZXI5SNCPU6NZNX
+Secret Key: [To be added - User should get from Stellar Lab]
 
 ## Role
-- Small backer with modest budget
-- Makes pledges below perk threshold
-- Supports creators' projects
+- Discovers campaigns on StellarPledge
+- Makes smaller pledges (100-200 XLM)
+- Gets refund if campaign fails
 
 ## Stellar Expert
-https://stellar.expert/explorer/testnet/account/GAY4ASCS7CPNVH4OVSRO75V7NDRP4DDAF22V5SR3DLPP2WKI2Y3FRVNA
+https://stellar.expert/explorer/testnet/account/GD4I6Y3FQW3PTNQAVP223YOFLHE66GTORJRGD55FWPZXI5SNCPU6NZNX
 
 ## Use Case
-Bob is a student who loves indie projects. He typically pledges 2,000 XLM to support creators, 
-which is below Alice's 3,000 XLM perk threshold, so he won't receive reward tokens.
+Bob is a student who supports creators with modest contributions.
+He will pledge 100 XLM to Alice's campaign (below perk threshold).

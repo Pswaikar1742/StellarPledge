@@ -12,7 +12,6 @@ import {
   nativeToScVal,
   Address,
   scValToNative,
-  xdr,
 } from "@stellar/stellar-sdk";
 import WalletService from "../../services/WalletService";
 import { CONTRACT_ADDRESS, NETWORK_CONFIG, TX_TIMEOUT, TX_POLL_INTERVAL } from "../../constants/constants";
@@ -38,17 +37,6 @@ export const numberToU128 = (value) => nativeToScVal(value, { type: "u128" });
 
 // Convert number to i128 ScVal
 export const numberToI128 = (value) => nativeToScVal(value, { type: "i128" });
-
-// Create Option<Address> ScVal
-export const optionAddressToScVal = (address) => {
-  if (address) {
-    // Some variant - wrap Address in a Vec with 1 element
-    return xdr.ScVal.scvVec([new Address(address).toScVal()]);
-  } else {
-    // None variant - empty Vec
-    return xdr.ScVal.scvVec([]);
-  }
-};
 
 /**
  * Core Contract Interaction Helper
@@ -153,13 +141,11 @@ export async function createCampaign(creator, goal, deadlineHours, perk = null) 
     // Add perk parameters
     if (perk && perk.threshold > 0) {
       params.push(numberToU128(Math.floor(perk.threshold * 10000000))); // threshold in stroops
-      // For Option<Address>, use proper Option variant
-      params.push(optionAddressToScVal(perk.assetAddress));
-      params.push(numberToI128(perk.amount || 1000000)); // perk token amount (default 1 token with 6 decimals)
+      params.push(perk.assetAddress ? addressToScVal(perk.assetAddress) : nativeToScVal(null)); // optional asset
+      params.push(numberToI128(perk.amount || 0)); // perk token amount
     } else {
       params.push(numberToU128(0)); // No perk threshold
-      // For Option<Address>, explicitly pass None variant
-      params.push(optionAddressToScVal(null));
+      params.push(nativeToScVal(null)); // No asset
       params.push(numberToI128(0)); // No amount
     }
 

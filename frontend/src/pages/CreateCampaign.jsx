@@ -6,15 +6,12 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { useWallet } from '../context/WalletContext';
-import { useCampaign } from '../context/CampaignContext';
 
 const CreateCampaign = () => {
   const navigate = useNavigate();
   const { isConnected, publicKey } = useWallet();
-  const { handleCreateCampaign, isLoading: contractLoading } = useCampaign();
   const [currentUser, setCurrentUser] = useState(null);
   const [step, setStep] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -58,56 +55,38 @@ const CreateCampaign = () => {
     }
   };
 
-  const handleSubmit = async () => {
-    if (!publicKey) {
-      alert('Please connect your wallet first');
-      return;
-    }
-
-    setIsSubmitting(true);
+  const handleSubmit = () => {
+    // Get existing campaigns
+    const campaigns = JSON.parse(localStorage.getItem('stellarpledge_campaigns') || '[]');
     
-    try {
-      // Parse form data
-      const goal = parseFloat(formData.goal);
-      const deadlineHours = parseInt(formData.duration) * 24; // convert days to hours
-      
-      // Optional perk configuration
-      const perk = formData.rewardTier ? {
-        threshold: parseFloat(formData.rewardTier),
-        assetAddress: null, // No perk tokens for now (can add later)
-        amount: 0
-      } : null;
-      
-      // Campaign UI data
-      const campaignData = {
-        title: formData.title,
-        description: formData.description,
+    // Create new campaign
+    const newCampaign = {
+      id: Date.now(),
+      creatorId: currentUser.id,
+      creatorName: currentUser.name,
+      creatorPublicKey: publicKey,
+      title: formData.title,
+      description: formData.description,
+      goal: parseInt(formData.goal),
+      pledged: 0,
+      backers: 0,
+      daysLeft: parseInt(formData.duration),
+      status: 'active',
+      rewardTier: {
+        minAmount: parseInt(formData.rewardTier),
         tokenName: formData.tokenName,
         tokenCode: formData.tokenCode,
-        tokenSupply: parseInt(formData.tokenSupply) || 0
-      };
-      
-      console.log('✅ Creating campaign (MOCK MODE)...');
-      console.log('Goal:', goal, 'XLM');
-      console.log('Duration:', deadlineHours, 'hours');
-      console.log('Perk threshold:', perk?.threshold || 'None');
-      
-      // ✅ Create campaign in MOCK MODE (no blockchain call yet)
-      const campaignId = await handleCreateCampaign(goal, deadlineHours, perk, campaignData);
-      
-      console.log(`✅ Campaign created (MOCK)! ID: ${campaignId}`);
-      
-      alert(`Campaign created successfully! ID: ${campaignId}\n\nYou can see it in your Creator Dashboard.\nOnce the goal is reached, you can complete the campaign to deploy it on blockchain!`);
-      
-      // Navigate to dashboard
-      navigate('/creator-dashboard');
-      
-    } catch (error) {
-      console.error("❌ Campaign creation failed:", error);
-      alert("Failed to create campaign: " + error.message);
-    } finally {
-      setIsSubmitting(false);
-    }
+        tokenSupply: parseInt(formData.tokenSupply)
+      },
+      pledges: [],
+      createdAt: new Date().toISOString()
+    };
+
+    campaigns.push(newCampaign);
+    localStorage.setItem('stellarpledge_campaigns', JSON.stringify(campaigns));
+
+    // Redirect to creator dashboard
+    navigate('/creator-dashboard');
   };
 
   if (!currentUser) return null;
@@ -380,9 +359,9 @@ const CreateCampaign = () => {
                 <Button
                   onClick={handleSubmit}
                   className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90 font-bold"
-                  disabled={!formData.rewardTier || !formData.tokenName || !formData.tokenCode || !formData.tokenSupply || isSubmitting || contractLoading}
+                  disabled={!formData.rewardTier || !formData.tokenName || !formData.tokenCode || !formData.tokenSupply}
                 >
-                  {isSubmitting || contractLoading ? 'Creating on Blockchain...' : 'Launch Campaign 🚀'}
+                  Launch Campaign 🚀
                 </Button>
               </div>
             </div>

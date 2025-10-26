@@ -1,6 +1,6 @@
 // StellarPledge Configuration Constants - TESTNET ONLY
 
-export const CONTRACT_ADDRESS = 'CCPL64I5DIKB6B57QM5CCUYBQ5RKCH3N4LF4XTQLQAD6JJNJ5JDJEKYP';
+export const CONTRACT_ADDRESS = 'CD4L4MPVSJ3RLAUYQ3ID2M75VWVVMDFBTESJIY4UULFFN33X2KNRTJXY';
 
 // Network Configuration - TESTNET ONLY
 export const NETWORK_CONFIG = {
@@ -19,7 +19,6 @@ export const DEMO_ACCOUNTS = {
   ALICE: {
     name: 'Alice (Creator - Film Director)',
     publicKey: 'GDMT3KZ3Q4S5YKPBCI7BGJB5H3ST7GF2IFRJVU34WEIE5UX5NZTW5FTF',
-    secretKey: 'SAH6ZOC6X4PVOHU7NQQ25KVWI2AGAHALTXI3N7UF4DLYUYJAJF22I7IF',
     role: 'Creator',
     description: 'Film director raising funds for "Chronos Echo" sci-fi short film',
     stellarExpert: 'https://stellar.expert/explorer/testnet/account/GDMT3KZ3Q4S5YKPBCI7BGJB5H3ST7GF2IFRJVU34WEIE5UX5NZTW5FTF',
@@ -27,20 +26,18 @@ export const DEMO_ACCOUNTS = {
   },
   BOB: {
     name: 'Bob (Student Backer)',
-    publicKey: 'GAY4ASCS7CPNVH4OVSRO75V7NDRP4DDAF22V5SR3DLPP2WKI2Y3FRVNA',
-    secretKey: 'SBJLYDJEBTRRQ3FPBOGQFLL6ZILZMZJGFVC7BIHTKJQJ4MAKT6ZNRX7C',
+    publicKey: 'GD4I6Y3FQW3PTNQAVP223YOFLHE66GTORJRGD55FWPZXI5SNCPU6NZNX',
     role: 'Small Backer',
     description: 'Student who supports creators with modest contributions',
-    stellarExpert: 'https://stellar.expert/explorer/testnet/account/GAY4ASCS7CPNVH4OVSRO75V7NDRP4DDAF22V5SR3DLPP2WKI2Y3FRVNA',
+    stellarExpert: 'https://stellar.expert/explorer/testnet/account/GD4I6Y3FQW3PTNQAVP223YOFLHE66GTORJRGD55FWPZXI5SNCPU6NZNX',
     typicalPledge: '100 XLM'
   },
   CHARLIE: {
     name: 'Charlie (Investor)',
-    publicKey: 'GDQUP4JVL64U6GSPR6GN2T2UQG4JBYCCYH7B6XYCHBTHO5DLMY5H4PLB',
-    secretKey: 'SC5QCVV6JUP3UYB7IOOMCUBHXI7RXYYZXIM2QPZQNFAWRYAUPCMO3E2O',
+    publicKey: 'GC4GCLLQEERQXIHNYITVQINGT54UK3ZPHR5ACC6QKS2TKVS4YL3X7YVP',
     role: 'High Backer',
     description: 'Investor who makes substantial pledges and receives perk rewards',
-    stellarExpert: 'https://stellar.expert/explorer/testnet/account/GDQUP4JVL64U6GSPR6GN2T2UQG4JBYCCYH7B6XYCHBTHO5DLMY5H4PLB',
+    stellarExpert: 'https://stellar.expert/explorer/testnet/account/GC4GCLLQEERQXIHNYITVQINGT54UK3ZPHR5ACC6QKS2TKVS4YL3X7YVP',
     typicalPledge: '500+ XLM'
   }
 };

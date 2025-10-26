@@ -1,12 +1,8 @@
-# Charlie - The Investor (High Backer)
+# Charlie - The High Backer (Investor)
 
 ## Account Details
-Public Key: GDQUP4JVL64U6GSPR6GN2T2UQG4JBYCCYH7B6XYCHBTHO5DLMY5H4PLB
-Secret Key: SC5QCVV6JUP3UYB7IOOMCUBHXI7RXYYZXIM2QPZQNFAWRYAUPCMO3E2O
-Recovery Phrase: emotion field obvious battle neck insane together always farm giraffe foil age say silver suffer cabbage clutch power jealous mammal ball monitor cat citizen
-
-## Balance
-10,000 XLM (funded for demo)
+Public Key: GC4GCLLQEERQXIHNYITVQINGT54UK3ZPHR5ACC6QKS2TKVS4YL3X7YVP
+Secret Key: [To be added - User should get from Stellar Lab]
 
 ## Role
 - Makes large pledges to campaigns
@@ -14,9 +10,8 @@ Recovery Phrase: emotion field obvious battle neck insane together always farm g
 - Supports creators with substantial backing
 
 ## Stellar Expert
-https://stellar.expert/explorer/testnet/account/GDQUP4JVL64U6GSPR6GN2T2UQG4JBYCCYH7B6XYCHBTHO5DLMY5H4PLB
+https://stellar.expert/explorer/testnet/account/GC4GCLLQEERQXIHNYITVQINGT54UK3ZPHR5ACC6QKS2TKVS4YL3X7YVP
 
 ## Use Case
 Charlie is an investor who makes larger contributions to promising projects.
-He will pledge 4,000 XLM to Alice's campaign (above 3,000 XLM threshold) and automatically 
-receive reward tokens through the smart contract.
+He will pledge 500 XLM to Alice's campaign and automatically receive 1 FILMCREDIT token.

@@ -4,18 +4,76 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, TrendingUp, Clock, CheckCircle, Wallet as WalletIcon } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { useWallet } from '../context/WalletContext';
-import { useCampaign } from '../context/CampaignContext';
 
 const CreatorDashboard = () => {
   const navigate = useNavigate();
-  const { isConnected, publicKey } = useWallet();
-  const { loadAllCampaigns, getUserCreatedCampaigns, isLoading } = useCampaign();
+  const { isConnected } = useWallet();
   const [currentUser, setCurrentUser] = useState(null);
-  const [userCampaigns, setUserCampaigns] = useState([]);
+  const [campaigns, setCampaigns] = useState([]);
+
+  // Helper function to determine campaign status
+  const getCampaignStatus = (campaign) => {
+    const percentFunded = (campaign.pledged / campaign.goal) * 100;
+    const now = new Date();
+    const deadline = new Date(campaign.deadline);
+    const isExpired = now > deadline;
+
+    // Check if goal is met
+    if (percentFunded >= 100) {
+      return 'successful';
+    }
+    
+    // Check if deadline passed
+    if (isExpired) {
+      return 'failed';
+    }
+    
+    // Check if pending approval
+    if (campaign.status === 'pending_approval' || campaign.status === 'pending') {
+      return 'pending';
+    }
+    
+    // Otherwise active
+    return 'active';
+  };
+
+  // Helper function to get status class
+  const getCampaignStatusClass = (campaign) => {
+    const status = getCampaignStatus(campaign);
+    switch (status) {
+      case 'active':
+        return 'bg-accent/20 text-accent';
+      case 'pending':
+        return 'bg-yellow-500/20 text-yellow-500';
+      case 'successful':
+        return 'bg-green-500/20 text-green-500';
+      case 'failed':
+        return 'bg-red-500/20 text-red-500';
+      default:
+        return 'bg-gray-500/20 text-gray-500';
+    }
+  };
+
+  // Helper function to get status label
+  const getCampaignStatusLabel = (campaign) => {
+    const status = getCampaignStatus(campaign);
+    switch (status) {
+      case 'active':
+        return '🔥 Active';
+      case 'pending':
+        return '⏳ Pending Approval';
+      case 'successful':
+        return '✅ Successful';
+      case 'failed':
+        return '❌ Failed';
+      default:
+        return '❓ Unknown';
+    }
+  };
 
   useEffect(() => {
     // Check if user is logged in
-    const loadUserData = async () => {
+    const loadUserData = () => {
       const user = JSON.parse(localStorage.getItem('stellarpledge_current_user'));
       if (!user) {
         navigate('/login');
@@ -30,29 +88,10 @@ const CreatorDashboard = () => {
       
       setCurrentUser(user);
 
-      // 🚀 LOAD CAMPAIGNS FROM BLOCKCHAIN
-      if (publicKey) {
-        console.log('📡 Loading campaigns from blockchain...');
-        await loadAllCampaigns();
-        
-        // Filter user's campaigns
-        const myCampaigns = getUserCreatedCampaigns();
-        
-        // Enhance with UI data from localStorage
-        const uiData = JSON.parse(localStorage.getItem('stellarpledge_campaign_ui') || '{}');
-        const enhanced = myCampaigns.map(campaign => ({
-          ...campaign,
-          title: uiData[campaign.id]?.title || 'Untitled Campaign',
-          description: uiData[campaign.id]?.description || '',
-          creatorName: uiData[campaign.id]?.creatorName || user.name,
-          daysLeft: Math.max(0, Math.floor((campaign.deadline - Date.now() / 1000) / 86400)),
-          backers: campaign.backers ? Object.keys(campaign.backers).length : 0,
-          status: campaign.state === 0 ? 'active' : campaign.state === 1 ? 'successful' : 'failed'
-        }));
-        
-        setUserCampaigns(enhanced);
-        console.log(`✅ Loaded ${enhanced.length} campaigns from blockchain`);
-      }
+      // Load user's campaigns from localStorage
+      const allCampaigns = JSON.parse(localStorage.getItem('stellarpledge_campaigns') || '[]');
+      const userCampaigns = allCampaigns.filter(c => c.creatorId === user.id);
+      setCampaigns(userCampaigns);
     };
 
     loadUserData();
@@ -63,7 +102,7 @@ const CreatorDashboard = () => {
     return () => {
       window.removeEventListener('user-login', loadUserData);
     };
-  }, [navigate, publicKey, loadAllCampaigns, getUserCreatedCampaigns]);
+  }, [navigate]);
 
   const handleConnectWallet = () => {
     // Trigger wallet connection modal from header
@@ -76,25 +115,25 @@ const CreatorDashboard = () => {
   const stats = [
     {
       label: "Active Campaigns",
-      value: userCampaigns.filter(c => c.status === 'active').length,
+      value: campaigns.filter(c => getCampaignStatus(c) === 'active').length,
       icon: TrendingUp,
       color: "text-accent"
     },
     {
       label: "Pending Approval",
-      value: userCampaigns.filter(c => c.status === 'pending').length,
+      value: campaigns.filter(c => getCampaignStatus(c) === 'pending').length,
       icon: Clock,
       color: "text-yellow-500"
     },
     {
       label: "Successful",
-      value: userCampaigns.filter(c => c.status === 'successful').length,
+      value: campaigns.filter(c => getCampaignStatus(c) === 'successful').length,
       icon: CheckCircle,
       color: "text-green-500"
     },
     {
       label: "Total Raised",
-      value: `${userCampaigns.reduce((sum, c) => sum + (c.pledged || 0), 0).toFixed(2)} XLM`,
+      value: `${campaigns.reduce((sum, c) => sum + c.pledged, 0)} XLM`,
       icon: TrendingUp,
       color: "text-accent"
     }
@@ -189,13 +228,9 @@ const CreatorDashboard = () => {
         </motion.div>
 
         {/* Campaigns List */}
-        {isLoading ? (
-          <div className="text-center py-12 bg-card rounded-2xl border border-border">
-            <p className="text-muted-foreground">Loading campaigns from blockchain...</p>
-          </div>
-        ) : userCampaigns.length > 0 ? (
+        {campaigns.length > 0 ? (
           <div className="grid grid-cols-1 gap-6">
-            {userCampaigns.map((campaign, index) => (
+            {campaigns.map((campaign, index) => (
               <motion.div
                 key={campaign.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -209,18 +244,17 @@ const CreatorDashboard = () => {
                       {campaign.title}
                     </h3>
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
-                      campaign.status === 'active' ? 'bg-accent/20 text-accent' :
-                      campaign.status === 'pending' ? 'bg-yellow-500/20 text-yellow-500' :
-                      campaign.status === 'successful' ? 'bg-green-500/20 text-green-500' :
-                      'bg-red-500/20 text-red-500'
+                      getCampaignStatusClass(campaign)
                     }`}>
-                      {campaign.status === 'active' ? '🔥 Active' :
-                       campaign.status === 'pending' ? '⏳ Pending' :
-                       campaign.status === 'successful' ? '✅ Successful' :
-                       '❌ Failed'}
+                      {getCampaignStatusLabel(campaign)}
                     </span>
                   </div>
-                  <Button variant="outline">View Details</Button>
+                  <Button 
+                    variant="outline"
+                    onClick={() => navigate(`/campaign/${campaign.id}`)}
+                  >
+                    View Details
+                  </Button>
                 </div>
 
                 {/* Progress Bar */}

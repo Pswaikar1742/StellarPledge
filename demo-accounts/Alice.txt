@@ -5,7 +5,7 @@ Public Key: GDMT3KZ3Q4S5YKPBCI7BGJB5H3ST7GF2IFRJVU34WEIE5UX5NZTW5FTF
 Secret Key: SAH6ZOC6X4PVOHU7NQQ25KVWI2AGAHALTXI3N7UF4DLYUYJAJF22I7IF
 
 ## Balance
-Initial: 1,000 XLM (for campaign creation demos)
+9,999.4180146 XLM (as of Oct 25, 2025)
 
 ## Role
 - Creates crowdfunding campaigns
@@ -16,5 +16,5 @@ Initial: 1,000 XLM (for campaign creation demos)
 https://stellar.expert/explorer/testnet/account/GDMT3KZ3Q4S5YKPBCI7BGJB5H3ST7GF2IFRJVU34WEIE5UX5NZTW5FTF
 
 ## Use Case
-Alice is a film director who wants to raise 6,000 XLM for her sci-fi short film "Chronos Echo".
-She will offer FILMCREDIT tokens to backers who pledge 3,000+ XLM.
+Alice is a film director who wants to raise 10,000 XLM for her sci-fi short film "Chronos Echo".
+She will offer FILMCREDIT tokens to backers who pledge 500+ XLM.
