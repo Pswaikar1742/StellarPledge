@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [1.0.1] - 2025-10-26
+
+### 🐛 Bug Fixes
+- ✅ Fixed campaign status showing "Failed" when 100% funded
+- ✅ Fixed "View Details" button navigation
+- ✅ Added smart status calculation based on funding and deadline
+- ✅ Improved status display consistency across all pages
+
+### 🧹 Repository Cleanup
+- ✅ Removed temporary fix guides and duplicate documentation
+- ✅ Removed old `/docs` folder (consolidated into `/documentation`)
+- ✅ Removed demo-accounts folder (info in documentation)
+- ✅ Cleaned up root directory files
+- ✅ Organized documentation structure
+- ✅ Added MIT License file
+
+---
+
 ## [1.0.0] - 2025-10-26
 
 ### 🎉 Initial Release - Demo Ready
